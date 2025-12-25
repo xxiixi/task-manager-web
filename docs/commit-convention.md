@@ -11,15 +11,16 @@
 |---|---|---|
 
 | feat | ✨ | New feature |
-| fix | 🐛 | Bug fix |
-| docs | 📝 | Documentation |
-| style | 🎨 | Code style |
-| refactor | ♻️ | Refactor |
+| fix | 🦋 | Bug fix |
+| docs | 📖 | Documentation |
+| style | 🔮 | Code style |
+| refactor | 🧚🏻 | Refactor |
 | perf | ⚡️ | Performance |
-| test | ✅ | Tests |
-| chore | 🔧 | Build / tools |
+| test | 📟 | Tests |
+| chore | 🧩 | Build / tools |
+| release | 🚀 | Release |
 
 ## Example
 
 ✨ feat(task): add task status filter
-🐛 fix(ui): resolve checkbox alignment issue
+🦋 fix(ui): resolve checkbox alignment issue

@@ -10,13 +10,14 @@ if (/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})/u.test(msg)) {
 
 const EMOJI_MAP = {
   feat: '✨',
-  fix: '🐛',
-  docs: '📝',
-  style: '🎨',
-  refactor: '♻️',
+  fix: '🦋',
+  docs: '📖',
+  style: '🔮',
+  refactor: '🧚🏻',
   perf: '⚡️',
-  test: '✅',
-  chore: '🔧',
+  test: '📟',
+  chore: '🧩',
+  release: '🚀',
 }
 
 const match = msg.match(/^(\w+)(\(.+\))?:\s/)
