@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# 1. 自动补 emoji
+node "$(dirname -- "$0")/add-emoji.mjs" "$1"
+
+# 2. 校验 commit message
+npx --no -- commitlint --edit "$1"
