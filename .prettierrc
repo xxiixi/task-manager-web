@@ -1,0 +1,38 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "printWidth": 120,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "bracketSameLine": false,
+  "quoteProps": "as-needed",
+  "proseWrap": "preserve",
+  "endOfLine": "auto",
+  "ignorePath": ".prettierignore",
+  "overrides": [
+    {
+      "files": ["*.vue"],
+      "options": {
+        "tabWidth": 2,
+        "endOfLine": "crlf",
+        "printWidth": 180
+      }
+    },
+    {
+      "files": ["*.md"],
+      "options": {
+        "printWidth": 80,
+        "proseWrap": "always"
+      }
+    },
+    {
+      "files": ["*.json"],
+      "options": {
+        "printWidth": 200,
+        "trailingComma": "none"
+      }
+    }
+  ]
+}
