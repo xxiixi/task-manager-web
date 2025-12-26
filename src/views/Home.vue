@@ -29,11 +29,16 @@ const filteredTasks = computed(() => {
   }
 })
 
-// 切换任务状态（简化为 pending 和 completed 之间的切换，类似 vue-todo-app）
+// 切换任务状态（在 pending -> in-progress -> completed -> pending 之间循环）
 const handleToggleStatus = (id: string) => {
   const task = taskStore.getTaskById(id)
   if (task) {
-    const newStatus: TaskStatus = task.status === 'completed' ? 'pending' : 'completed'
+    const statusMap: Record<TaskStatus, TaskStatus> = {
+      pending: 'in-progress',
+      'in-progress': 'completed',
+      completed: 'pending',
+    }
+    const newStatus = statusMap[task.status]
     taskStore.updateTask(id, { status: newStatus })
   }
 }

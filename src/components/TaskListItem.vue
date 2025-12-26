@@ -1,14 +1,16 @@
 <template>
   <div class="task-item" :class="{ done: task.status === 'completed' }">
-    <label>
-      <input
-        type="checkbox"
-        :checked="task.status === 'completed'"
+    <div class="task-main">
+      <span
+        class="status-tag"
+        :class="`status-${task.status}`"
         @click="handleToggle"
-      />
-      <span class="check-button"></span>
+        :title="getStatusTitle"
+      >
+        {{ getStatusText }}
+      </span>
       <span class="task-content">{{ task.title }}</span>
-    </label>
+    </div>
     <button class="delete-btn" @click="handleDelete" :title="t.deleteTask">
       <span class="delete-icon">×</span>
     </button>
@@ -16,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import type { Task } from '../types/task'
 import { useI18nStore } from '../stores/i18n'
@@ -32,7 +35,25 @@ const emit = defineEmits<{
 const i18nStore = useI18nStore()
 const { t } = storeToRefs(i18nStore)
 
+const getStatusText = computed(() => {
+  switch (props.task.status) {
+    case 'pending':
+      return t.value.pending
+    case 'in-progress':
+      return t.value.inProgress
+    case 'completed':
+      return t.value.completed
+    default:
+      return t.value.pending
+  }
+})
+
+const getStatusTitle = computed(() => {
+  return `${t.value.pending} / ${t.value.inProgress} / ${t.value.completed}`
+})
+
 const handleToggle = (e: Event) => {
+  e.stopPropagation()
   emit('toggleStatus', props.task.id)
 }
 
@@ -63,60 +84,60 @@ const handleDelete = (e: Event) => {
     }
   }
 
-  label {
-    position: relative;
+  .task-main {
     display: flex;
     align-items: center;
-    cursor: pointer;
     flex: 1;
+    gap: @spacing-md;
 
-    .check-button {
-      position: absolute;
-      top: 0;
-      left: 0;
-
-      &::before,
-      &::after {
-        content: '';
-        display: block;
-        position: absolute;
-        width: @font-size-lg;
-        height: @font-size-lg;
-        border-radius: 50%;
-      }
-
-      &::before {
-        border: 1px solid var(--primary-color);
-      }
-
-      &::after {
-        transition: @transition-base;
-        background: var(--primary-color);
-        transform: translate(1px, 1px) scale(0.8);
-        opacity: 0;
-      }
-    }
-
-    input {
-      margin-right: @spacing-md;
-      opacity: 0;
-      width: @font-size-lg;
-      height: @font-size-lg;
+    .status-tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: @border-radius-full;
+      font-size: @font-size-sm;
+      font-weight: @font-weight-medium;
       cursor: pointer;
+      transition: all @transition-fast;
+      white-space: nowrap;
+      user-select: none;
+      flex-shrink: 0;
+      width: 100px;
+      text-align: center;
+      line-height: 1.2;
+      box-sizing: border-box;
 
-      &:checked + .check-button::after {
-        opacity: 1;
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: @shadow-sm;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &.status-pending {
+        background: var(--status-pending-bg);
+        color: var(--status-pending-color);
+      }
+
+      &.status-in-progress {
+        background: var(--status-in-progress-bg);
+        color: var(--status-in-progress-color);
+      }
+
+      &.status-completed {
+        background: var(--status-completed-bg);
+        color: var(--status-completed-color);
       }
     }
 
     .task-content {
-      margin-left: (@spacing-md + @font-size-lg);
       flex: 1;
     }
   }
 
   &.done {
-    label .task-content {
+    .task-main .task-content {
       text-decoration: line-through;
       font-style: italic;
       color: var(--text-tertiary);
