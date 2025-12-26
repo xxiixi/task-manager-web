@@ -5,6 +5,8 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
 import './styles/index.less'
+// 导入 Bootstrap Icons（按需使用）
+import 'bootstrap-icons/font/bootstrap-icons.css'
 
 const app = createApp(App)
 const pinia = createPinia()
