@@ -83,8 +83,10 @@ main {
 }
 
 .container {
-  width: 60%;
-  max-width: 400px;
+  width: 90%;
+  max-width: 800px;
+  min-width: 400px;
+  height: 660px;
   box-shadow: @shadow-lg;
   border-radius: @border-radius-2xl;
   padding: 48px 28px;

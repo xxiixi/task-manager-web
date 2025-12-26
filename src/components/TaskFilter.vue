@@ -58,6 +58,17 @@ const filters = computed(() => [
     cursor: pointer;
     user-select: none;
 
+    &:hover:not(.active) {
+      color: @filter-active;
+      transform: scale(1.1);
+      opacity: 0.8;
+
+      html.dark & {
+        color: @text-primary-dark;
+        opacity: 0.9;
+      }
+    }
+
     &.active {
       color: @filter-active;
       transform: scale(1.2);
