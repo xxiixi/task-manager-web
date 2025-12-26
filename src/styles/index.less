@@ -14,6 +14,13 @@ body {
   background-color: @bg-color;
   color: @text-primary;
   line-height: @line-height-normal;
+  transition: background-color @transition-base, color @transition-base;
+}
+
+// 黑暗模式样式
+:global(.dark) body {
+  background-color: @bg-color-dark;
+  color: @text-primary-dark;
 }
 
 #app {
@@ -34,12 +41,24 @@ body {
   background: @bg-secondary;
 }
 
+:global(.dark) ::-webkit-scrollbar-track {
+  background: @bg-secondary-dark;
+}
+
 ::-webkit-scrollbar-thumb {
   background: @border-color;
   border-radius: @border-radius-full;
 
   &:hover {
     background: @border-hover;
+  }
+}
+
+:global(.dark) ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
   }
 }
 
