@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useTaskStore } from '@/stores/task'
 import { useI18nStore } from '@/stores/i18n'
 import TaskAdd from './components/TaskAdd.vue'
@@ -9,7 +10,7 @@ import HeaderToolbar from './components/HeaderToolbar.vue'
 import type { TaskStatus } from '@/types/task'
 
 const i18nStore = useI18nStore()
-const { t } = i18nStore
+const { t } = storeToRefs(i18nStore)
 
 const taskStore = useTaskStore()
 const filter = ref<'all' | TaskStatus>('all')

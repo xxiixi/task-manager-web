@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import type { Task } from '@/types/task'
 import { useI18nStore } from '@/stores/i18n'
 
@@ -29,7 +30,7 @@ const emit = defineEmits<{
 }>()
 
 const i18nStore = useI18nStore()
-const { t } = i18nStore
+const { t } = storeToRefs(i18nStore)
 
 const handleToggle = (e: Event) => {
   emit('toggleStatus', props.task.id)

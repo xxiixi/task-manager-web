@@ -15,6 +15,8 @@ const translations = {
     darkMode: '黑暗模式',
     lightMode: '浅色模式',
     language: '语言',
+    switchToEnglish: '切换到 English',
+    switchToChinese: '切换到 中文',
     github: 'GitHub'
   },
   'en-US': {
@@ -28,6 +30,8 @@ const translations = {
     darkMode: 'Dark Mode',
     lightMode: 'Light Mode',
     language: 'Language',
+    switchToEnglish: 'Switch to English',
+    switchToChinese: 'Switch to Chinese',
     github: 'GitHub'
   }
 }

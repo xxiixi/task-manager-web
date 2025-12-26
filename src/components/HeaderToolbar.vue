@@ -10,9 +10,9 @@
     <button
       class="toolbar-btn"
       @click="handleToggleLocale"
-      :title="t.language"
+      :title="languageTooltip"
     >
-      <i class="bi" :class="i18nStore.locale === 'zh-CN' ? 'bi-translate' : 'bi-globe'"></i>
+      <i class="bi" :class="i18nStore.locale === 'zh-CN' ? 'bi-globe-americas' : 'bi-globe-central-south-asia'"></i>
     </button>
     <a
       class="toolbar-btn"
@@ -27,12 +27,18 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useThemeStore } from '@/stores/theme'
 import { useI18nStore } from '@/stores/i18n'
 
 const themeStore = useThemeStore()
 const i18nStore = useI18nStore()
-const { t } = i18nStore
+const { t } = storeToRefs(i18nStore)
+
+const languageTooltip = computed(() => {
+  return i18nStore.locale === 'zh-CN' ? t.value.switchToEnglish : t.value.switchToChinese
+})
 
 const handleToggleTheme = () => {
   themeStore.toggleTheme()

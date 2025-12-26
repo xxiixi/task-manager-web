@@ -14,13 +14,14 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useTaskStore } from '@/stores/task'
 import { useI18nStore } from '@/stores/i18n'
 import type { TaskPriority } from '@/types/task'
 
 const taskStore = useTaskStore()
 const i18nStore = useI18nStore()
-const { t } = i18nStore
+const { t } = storeToRefs(i18nStore)
 const taskTitle = ref('')
 
 const placeholder = computed(() => t.addTask + '...')
