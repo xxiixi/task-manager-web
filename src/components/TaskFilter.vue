@@ -15,8 +15,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import type { TaskStatus } from '@/types/task'
-import { useI18nStore } from '@/stores/i18n'
+import type { TaskStatus } from '../types/task'
+import { useI18nStore } from '../stores/i18n'
 
 type FilterValue = 'all' | TaskStatus
 
@@ -32,10 +32,10 @@ const i18nStore = useI18nStore()
 const { t } = storeToRefs(i18nStore)
 
 const filters = computed(() => [
-  { label: t.all, value: 'all' as FilterValue },
-  { label: t.pending, value: 'pending' as FilterValue },
-  { label: t.inProgress, value: 'in-progress' as FilterValue },
-  { label: t.completed, value: 'completed' as FilterValue },
+  { label: t.value.all, value: 'all' as FilterValue },
+  { label: t.value.pending, value: 'pending' as FilterValue },
+  { label: t.value.inProgress, value: 'in-progress' as FilterValue },
+  { label: t.value.completed, value: 'completed' as FilterValue },
 ])
 </script>
 

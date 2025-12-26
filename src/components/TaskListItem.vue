@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import type { Task } from '@/types/task'
-import { useI18nStore } from '@/stores/i18n'
+import type { Task } from '../types/task'
+import { useI18nStore } from '../stores/i18n'
 
 const props = defineProps<{
   task: Task

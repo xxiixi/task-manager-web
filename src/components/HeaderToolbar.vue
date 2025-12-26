@@ -29,8 +29,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useThemeStore } from '@/stores/theme'
-import { useI18nStore } from '@/stores/i18n'
+import { useThemeStore } from '../stores/theme'
+import { useI18nStore } from '../stores/i18n'
 
 const themeStore = useThemeStore()
 const i18nStore = useI18nStore()
