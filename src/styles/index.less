@@ -1,0 +1,45 @@
+@import './variables.less';
+
+// 全局样式重置
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: @font-family;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: @bg-color;
+  color: @text-primary;
+  line-height: @line-height-normal;
+}
+
+#app {
+  min-height: 100vh;
+  width: 100vw;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+// 滚动条样式
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: @bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: @border-color;
+  border-radius: @border-radius-full;
+
+  &:hover {
+    background: @border-hover;
+  }
+}
+
