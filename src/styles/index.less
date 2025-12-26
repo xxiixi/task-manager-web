@@ -33,16 +33,16 @@ html.dark body {
 
 // 滚动条样式
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: @spacing-sm;
+  height: @spacing-sm;
 }
 
 ::-webkit-scrollbar-track {
   background: @bg-secondary;
-}
 
-html.dark ::-webkit-scrollbar-track {
-  background: @bg-secondary-dark;
+  html.dark & {
+    background: @bg-secondary-dark;
+  }
 }
 
 ::-webkit-scrollbar-thumb {
@@ -52,13 +52,13 @@ html.dark ::-webkit-scrollbar-track {
   &:hover {
     background: @border-hover;
   }
-}
 
-html.dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  html.dark & {
+    background: rgba(255, 255, 255, 0.2);
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
   }
 }
 

@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import TaskListItem from './TaskListItem.vue'
-import type { Task } from '@/types/task'
+import type { Task } from '../types/task'
 
 const props = defineProps<{
   tasks: Task[]
@@ -33,6 +33,8 @@ const handleDelete = (id: string) => {
 </script>
 
 <style scoped lang="less">
+@import '@/styles/variables.less';
+
 .task-list {
   display: grid;
   row-gap: 14px;

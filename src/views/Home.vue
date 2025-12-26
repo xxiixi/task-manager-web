@@ -76,10 +76,10 @@ main {
   justify-items: center;
   background: @bg-color;
   transition: background-color @transition-base;
-}
 
-html.dark main {
-  background: @bg-color-dark;
+  html.dark & {
+    background: @bg-color-dark;
+  }
 }
 
 .container {
@@ -90,22 +90,22 @@ html.dark main {
   padding: 48px 28px;
   background-color: @bg-secondary;
   transition: background-color @transition-base;
-}
 
-html.dark .container {
-  background-color: @bg-secondary-dark;
+  html.dark & {
+    background-color: @bg-secondary-dark;
+  }
 }
 
 h1 {
-  margin: 24px 0;
+  margin: @spacing-lg 0;
   font-size: @font-size-2xl;
   color: @text-primary;
   text-align: center;
   transition: color @transition-base;
-}
 
-html.dark h1 {
-  color: @text-primary-dark;
+  html.dark & {
+    color: @text-primary-dark;
+  }
 }
 </style>
 

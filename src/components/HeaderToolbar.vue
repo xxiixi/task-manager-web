@@ -87,6 +87,15 @@ const handleToggleLocale = () => {
   text-decoration: none;
   box-shadow: @shadow-sm;
 
+  html.dark & {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+
   &:hover {
     background: @card-hover-bg;
     transform: translateY(-2px);
@@ -98,17 +107,7 @@ const handleToggleLocale = () => {
   }
 
   .bi {
-    font-size: 18px;
-  }
-}
-
-// 黑暗模式样式
-html.dark .toolbar-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
+    font-size: @font-size-lg;
   }
 }
 </style>

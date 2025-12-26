@@ -46,117 +46,118 @@ const handleDelete = (e: Event) => {
 @import '@/styles/variables.less';
 
 .task-item {
-  background: white;
-  padding: 16px;
+  background: @card-bg;
+  padding: @spacing-md;
   border-radius: @border-radius-md;
   color: @text-secondary;
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: all @transition-base;
-}
 
-html.dark .task-item {
-  background: @card-bg-dark;
-  color: @text-secondary-dark;
-}
+  html.dark & {
+    background: @card-bg-dark;
+    color: @text-secondary-dark;
+  }
 
-.task-item:hover {
-  box-shadow: @shadow-sm;
-}
+  &:hover {
+    box-shadow: @shadow-sm;
 
-.task-item label {
-  position: relative;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  flex: 1;
-}
+    .delete-btn {
+      opacity: 1;
+    }
+  }
 
-.task-item.done label .task-content {
-  text-decoration: line-through;
-  font-style: italic;
-  color: @text-tertiary;
-}
+  label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex: 1;
 
-html.dark .task-item.done label .task-content {
-  color: @text-tertiary-dark;
-}
+    .check-button {
+      position: absolute;
+      top: 0;
+      left: 0;
 
-/* 选中item的动画特效 */
-.task-item label span.check-button {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: @font-size-lg;
+        height: @font-size-lg;
+        border-radius: 50%;
+      }
 
-.task-item label span.check-button::before,
-.task-item label span.check-button::after {
-  content: '';
-  display: block;
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-}
+      &::before {
+        border: 1px solid @primary-color;
+      }
 
-.task-item label span.check-button::before {
-  border: 1px solid @primary-color;
-}
+      &::after {
+        transition: @transition-base;
+        background: @primary-color;
+        transform: translate(1px, 1px) scale(0.8);
+        opacity: 0;
+      }
+    }
 
-.task-item label span.check-button::after {
-  transition: 0.4s;
-  background: @primary-color;
-  transform: translate(1px, 1px) scale(0.8);
-  opacity: 0;
-}
+    input {
+      margin-right: @spacing-md;
+      opacity: 0;
+      width: @font-size-lg;
+      height: @font-size-lg;
+      cursor: pointer;
 
-.task-item input {
-  margin-right: 16px;
-  opacity: 0;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
+      &:checked + .check-button::after {
+        opacity: 1;
+      }
+    }
 
-.task-item input:checked + span.check-button::after {
-  opacity: 1;
-}
+    .task-content {
+      margin-left: (@spacing-md + @font-size-lg);
+      flex: 1;
+    }
+  }
 
-.task-content {
-  margin-left: 34px;
-  flex: 1;
-}
+  &.done {
+    label .task-content {
+      text-decoration: line-through;
+      font-style: italic;
+      color: @text-tertiary;
 
-.delete-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  color: @text-tertiary;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all @transition-fast;
-  opacity: 0;
-}
+      html.dark & {
+        color: @text-tertiary-dark;
+      }
+    }
+  }
 
-.task-item:hover .delete-btn {
-  opacity: 1;
-}
+  .delete-btn {
+    width: @spacing-lg;
+    height: @spacing-lg;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: @text-tertiary;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all @transition-fast;
+    opacity: 0;
 
-.delete-btn:hover {
-  background: @error-color;
-  color: white;
-  transform: scale(1.1);
-}
+    &:hover {
+      background: @error-color;
+      color: white;
+      transform: scale(1.1);
+    }
 
-.delete-icon {
-  font-size: 20px;
-  line-height: 1;
-  font-weight: @font-weight-bold;
+    .delete-icon {
+      font-size: @font-size-lg;
+      line-height: 1;
+      font-weight: @font-weight-bold;
+    }
+  }
 }
 </style>
 

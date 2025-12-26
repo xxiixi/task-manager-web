@@ -44,30 +44,30 @@ const filters = computed(() => [
 
 .filters {
   display: flex;
-  margin: 24px 2px;
+  margin: @spacing-lg @spacing-xs;
   color: @filter-inactive;
   font-size: @font-size-sm;
-}
 
-.filters .filter {
-  margin-right: 14px;
-  transition: @transition-slow;
-  cursor: pointer;
-  user-select: none;
-}
+  html.dark & {
+    color: @text-tertiary-dark;
+  }
 
-.filters .filter.active {
-  color: @filter-active;
-  transform: scale(1.2);
-  font-weight: @font-weight-medium;
-}
+  .filter {
+    margin-right: (@spacing-sm + @spacing-xs);
+    transition: @transition-slow;
+    cursor: pointer;
+    user-select: none;
 
-html.dark .filters {
-  color: @text-tertiary-dark;
-}
+    &.active {
+      color: @filter-active;
+      transform: scale(1.2);
+      font-weight: @font-weight-medium;
 
-html.dark .filters .filter.active {
-  color: @text-primary-dark;
+      html.dark & {
+        color: @text-primary-dark;
+      }
+    }
+  }
 }
 </style>
 

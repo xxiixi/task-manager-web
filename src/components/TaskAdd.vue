@@ -15,16 +15,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useTaskStore } from '@/stores/task'
-import { useI18nStore } from '@/stores/i18n'
-import type { TaskPriority } from '@/types/task'
+import { useTaskStore } from '../stores/task'
+import { useI18nStore } from '../stores/i18n'
+import type { TaskPriority } from '../types/task'
 
 const taskStore = useTaskStore()
 const i18nStore = useI18nStore()
 const { t } = storeToRefs(i18nStore)
 const taskTitle = ref('')
 
-const placeholder = computed(() => t.addTask + '...')
+const placeholder = computed(() => t.value.addTask + '...')
 
 const handleAddTask = () => {
   if (taskTitle.value.trim()) {
@@ -45,64 +45,62 @@ const handleAddTask = () => {
   position: relative;
   display: flex;
   align-items: center;
-}
 
-.input-add input {
-  padding: 16px 52px 16px 18px;
-  border-radius: @border-radius-3xl;
-  border: none;
-  outline: none;
-  box-shadow: @shadow-input;
-  width: 100%;
-  font-size: @font-size-md;
-  color: @text-secondary;
-  font-family: @font-family;
-}
+  input {
+    padding: 16px 52px 16px 18px;
+    border-radius: @border-radius-3xl;
+    border: none;
+    outline: none;
+    box-shadow: @shadow-input;
+    width: 100%;
+    font-size: @font-size-md;
+    color: @text-secondary;
+    font-family: @font-family;
 
-.input-add input::placeholder {
-  color: @text-tertiary;
-}
+    &::placeholder {
+      color: @text-tertiary;
+    }
 
-html.dark .input-add input {
-  background: @card-bg-dark;
-  color: @text-secondary-dark;
-}
+    html.dark & {
+      background: @card-bg-dark;
+      color: @text-secondary-dark;
 
-html.dark .input-add input::placeholder {
-  color: @text-tertiary-dark;
-}
+      &::placeholder {
+        color: @text-tertiary-dark;
+      }
+    }
+  }
 
-.input-add button {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: @gradient-primary;
-  border: none;
-  outline: none;
-  color: white;
-  position: absolute;
-  right: 0px;
-  cursor: pointer;
-  transition: transform @transition-fast;
-}
+  button {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: @gradient-primary;
+    border: none;
+    outline: none;
+    color: white;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    transition: transform @transition-fast;
 
-.input-add button:hover {
-  transform: scale(1.05);
-}
+    &:hover {
+      transform: scale(1.05);
+    }
 
-.input-add button:active {
-  transform: scale(0.95);
-}
+    &:active {
+      transform: scale(0.95);
+    }
 
-/* 通过纯css实现加号 */
-.input-add .plus {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff);
-  background-size: 50% 2px, 2px 50%;
-  background-position: center;
-  background-repeat: no-repeat;
+    .plus {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(white, white), linear-gradient(white, white);
+      background-size: 50% 2px, 2px 50%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
 }
 </style>
-
