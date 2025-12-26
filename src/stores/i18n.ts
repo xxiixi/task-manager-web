@@ -17,7 +17,10 @@ const translations = {
     language: '语言',
     switchToEnglish: '切换到 English',
     switchToChinese: '切换到 中文',
-    github: 'GitHub'
+    github: 'GitHub',
+    priorityNormal: '普通',
+    priorityImportant: '重要',
+    priorityUrgent: '紧急'
   },
   'en-US': {
     title: 'Task Manager',
@@ -32,7 +35,10 @@ const translations = {
     language: 'Language',
     switchToEnglish: 'Switch to English',
     switchToChinese: 'Switch to Chinese',
-    github: 'GitHub'
+    github: 'GitHub',
+    priorityNormal: 'Normal',
+    priorityImportant: 'Important',
+    priorityUrgent: 'Urgent'
   }
 }
 
