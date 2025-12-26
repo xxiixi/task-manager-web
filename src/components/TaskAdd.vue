@@ -63,12 +63,12 @@ const handleAddTask = () => {
   color: @text-tertiary;
 }
 
-:global(.dark) .input-add input {
+html.dark .input-add input {
   background: @card-bg-dark;
   color: @text-secondary-dark;
 }
 
-:global(.dark) .input-add input::placeholder {
+html.dark .input-add input::placeholder {
   color: @text-tertiary-dark;
 }
 

@@ -62,11 +62,11 @@ const filters = computed(() => [
   font-weight: @font-weight-medium;
 }
 
-:global(.dark) .filters {
+html.dark .filters {
   color: @text-tertiary-dark;
 }
 
-:global(.dark) .filters .filter.active {
+html.dark .filters .filter.active {
   color: @text-primary-dark;
 }
 </style>

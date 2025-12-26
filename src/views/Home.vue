@@ -78,7 +78,7 @@ main {
   transition: background-color @transition-base;
 }
 
-:global(.dark) main {
+html.dark main {
   background: @bg-color-dark;
 }
 
@@ -92,7 +92,7 @@ main {
   transition: background-color @transition-base;
 }
 
-:global(.dark) .container {
+html.dark .container {
   background-color: @bg-secondary-dark;
 }
 
@@ -104,7 +104,7 @@ h1 {
   transition: color @transition-base;
 }
 
-:global(.dark) h1 {
+html.dark h1 {
   color: @text-primary-dark;
 }
 </style>

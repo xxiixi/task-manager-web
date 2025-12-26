@@ -103,7 +103,7 @@ const handleToggleLocale = () => {
 }
 
 // 黑暗模式样式
-:global(.dark) .toolbar-btn {
+html.dark .toolbar-btn {
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.9);
 

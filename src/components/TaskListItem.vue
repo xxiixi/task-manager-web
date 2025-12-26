@@ -56,7 +56,7 @@ const handleDelete = (e: Event) => {
   transition: all @transition-base;
 }
 
-:global(.dark) .task-item {
+html.dark .task-item {
   background: @card-bg-dark;
   color: @text-secondary-dark;
 }
@@ -79,7 +79,7 @@ const handleDelete = (e: Event) => {
   color: @text-tertiary;
 }
 
-:global(.dark) .task-item.done label .task-content {
+html.dark .task-item.done label .task-content {
   color: @text-tertiary-dark;
 }
 

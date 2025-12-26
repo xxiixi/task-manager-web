@@ -18,7 +18,7 @@ body {
 }
 
 // 黑暗模式样式
-:global(.dark) body {
+html.dark body {
   background-color: @bg-color-dark;
   color: @text-primary-dark;
 }
@@ -41,7 +41,7 @@ body {
   background: @bg-secondary;
 }
 
-:global(.dark) ::-webkit-scrollbar-track {
+html.dark ::-webkit-scrollbar-track {
   background: @bg-secondary-dark;
 }
 
@@ -54,7 +54,7 @@ body {
   }
 }
 
-:global(.dark) ::-webkit-scrollbar-thumb {
+html.dark ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
 
   &:hover {
