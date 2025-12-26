@@ -4,7 +4,7 @@
       type="text"
       v-model="taskTitle"
       @keyup.enter="handleAddTask"
-      placeholder="添加新任务..."
+      :placeholder="placeholder"
     />
     <button @click="handleAddTask">
       <i class="plus"></i>
@@ -13,12 +13,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useTaskStore } from '@/stores/task'
+import { useI18nStore } from '@/stores/i18n'
 import type { TaskPriority } from '@/types/task'
 
 const taskStore = useTaskStore()
+const i18nStore = useI18nStore()
+const { t } = i18nStore
 const taskTitle = ref('')
+
+const placeholder = computed(() => t.addTask + '...')
 
 const handleAddTask = () => {
   if (taskTitle.value.trim()) {
@@ -55,6 +60,15 @@ const handleAddTask = () => {
 
 .input-add input::placeholder {
   color: @text-tertiary;
+}
+
+:global(.dark) .input-add input {
+  background: @card-bg-dark;
+  color: @text-secondary-dark;
+}
+
+:global(.dark) .input-add input::placeholder {
+  color: @text-tertiary-dark;
 }
 
 .input-add button {

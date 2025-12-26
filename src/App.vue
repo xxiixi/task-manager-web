@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useTaskStore } from '@/stores/task'
+import { useI18nStore } from '@/stores/i18n'
 import TaskAdd from './components/TaskAdd.vue'
 import TaskList from './components/TaskList.vue'
 import TaskFilter from './components/TaskFilter.vue'
+import HeaderToolbar from './components/HeaderToolbar.vue'
 import type { TaskStatus } from '@/types/task'
+
+const i18nStore = useI18nStore()
+const { t } = i18nStore
 
 const taskStore = useTaskStore()
 const filter = ref<'all' | TaskStatus>('all')
@@ -45,8 +50,9 @@ const handleFilterChange = (value: 'all' | TaskStatus) => {
 
 <template>
   <main>
+    <HeaderToolbar />
     <div class="container">
-      <h1>任务管理器</h1>
+      <h1>{{ t.title }}</h1>
       <TaskAdd />
       <TaskFilter :selected="filter" @change-filter="handleFilterChange" />
       <TaskList
@@ -68,6 +74,11 @@ main {
   align-items: center;
   justify-items: center;
   background: @bg-color;
+  transition: background-color @transition-base;
+}
+
+:global(.dark) main {
+  background: @bg-color-dark;
 }
 
 .container {
@@ -77,6 +88,11 @@ main {
   border-radius: @border-radius-2xl;
   padding: 48px 28px;
   background-color: @bg-secondary;
+  transition: background-color @transition-base;
+}
+
+:global(.dark) .container {
+  background-color: @bg-secondary-dark;
 }
 
 h1 {
@@ -84,5 +100,10 @@ h1 {
   font-size: @font-size-2xl;
   color: @text-primary;
   text-align: center;
+  transition: color @transition-base;
+}
+
+:global(.dark) h1 {
+  color: @text-primary-dark;
 }
 </style>

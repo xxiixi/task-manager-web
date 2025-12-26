@@ -13,7 +13,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { TaskStatus } from '@/types/task'
+import { useI18nStore } from '@/stores/i18n'
 
 type FilterValue = 'all' | TaskStatus
 
@@ -25,12 +27,15 @@ const emit = defineEmits<{
   'change-filter': [value: FilterValue]
 }>()
 
-const filters = [
-  { label: '全部', value: 'all' as FilterValue },
-  { label: '待处理', value: 'pending' as FilterValue },
-  { label: '进行中', value: 'in-progress' as FilterValue },
-  { label: '已完成', value: 'completed' as FilterValue },
-]
+const i18nStore = useI18nStore()
+const { t } = i18nStore
+
+const filters = computed(() => [
+  { label: t.all, value: 'all' as FilterValue },
+  { label: t.pending, value: 'pending' as FilterValue },
+  { label: t.inProgress, value: 'in-progress' as FilterValue },
+  { label: t.completed, value: 'completed' as FilterValue },
+])
 </script>
 
 <style scoped lang="less">
@@ -54,6 +59,14 @@ const filters = [
   color: @filter-active;
   transform: scale(1.2);
   font-weight: @font-weight-medium;
+}
+
+:global(.dark) .filters {
+  color: @text-tertiary-dark;
+}
+
+:global(.dark) .filters .filter.active {
+  color: @text-primary-dark;
 }
 </style>
 

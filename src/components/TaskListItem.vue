@@ -9,7 +9,7 @@
       <span class="check-button"></span>
       <span class="task-content">{{ task.title }}</span>
     </label>
-    <button class="delete-btn" @click="handleDelete" title="删除任务">
+    <button class="delete-btn" @click="handleDelete" :title="t.deleteTask">
       <span class="delete-icon">×</span>
     </button>
   </div>
@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 import type { Task } from '@/types/task'
+import { useI18nStore } from '@/stores/i18n'
 
 const props = defineProps<{
   task: Task
@@ -26,6 +27,9 @@ const emit = defineEmits<{
   toggleStatus: [id: string]
   delete: [id: string]
 }>()
+
+const i18nStore = useI18nStore()
+const { t } = i18nStore
 
 const handleToggle = (e: Event) => {
   emit('toggleStatus', props.task.id)
@@ -51,6 +55,11 @@ const handleDelete = (e: Event) => {
   transition: all @transition-base;
 }
 
+:global(.dark) .task-item {
+  background: @card-bg-dark;
+  color: @text-secondary-dark;
+}
+
 .task-item:hover {
   box-shadow: @shadow-sm;
 }
@@ -67,6 +76,10 @@ const handleDelete = (e: Event) => {
   text-decoration: line-through;
   font-style: italic;
   color: @text-tertiary;
+}
+
+:global(.dark) .task-item.done label .task-content {
+  color: @text-tertiary-dark;
 }
 
 /* 选中item的动画特效 */
