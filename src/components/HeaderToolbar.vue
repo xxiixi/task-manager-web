@@ -3,9 +3,9 @@
     <button
       class="toolbar-btn"
       @click="handleToggleTheme"
-      :title="themeStore.isDark ? t.lightMode : t.darkMode"
+      :title="themeTooltip"
     >
-      <i class="bi" :class="themeStore.isDark ? 'bi-sun' : 'bi-moon'"></i>
+      <i class="bi" :class="isDark ? 'bi-sun' : 'bi-moon-stars'"></i>
     </button>
     <button
       class="toolbar-btn"
@@ -19,7 +19,7 @@
       href="https://github.com/xxiixi/task-manager-web"
       target="_blank"
       rel="noopener noreferrer"
-      :title="t.github"
+      :title="githubTooltip"
     >
       <i class="bi bi-github"></i>
     </a>
@@ -35,9 +35,20 @@ import { useI18nStore } from '@/stores/i18n'
 const themeStore = useThemeStore()
 const i18nStore = useI18nStore()
 const { t } = storeToRefs(i18nStore)
+const { isDark } = storeToRefs(themeStore)
 
 const languageTooltip = computed(() => {
+  if (!t.value) return ''
   return i18nStore.locale === 'zh-CN' ? t.value.switchToEnglish : t.value.switchToChinese
+})
+
+const themeTooltip = computed(() => {
+  if (!t.value) return ''
+  return isDark.value ? t.value.lightMode : t.value.darkMode
+})
+
+const githubTooltip = computed(() => {
+  return t.value?.github || 'GitHub'
 })
 
 const handleToggleTheme = () => {
