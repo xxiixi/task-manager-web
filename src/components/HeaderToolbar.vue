@@ -1,0 +1,98 @@
+<template>
+  <div class="header-toolbar">
+    <button
+      class="toolbar-btn"
+      @click="handleToggleTheme"
+      :title="themeStore.isDark ? t.lightMode : t.darkMode"
+    >
+      <i class="bi" :class="themeStore.isDark ? 'bi-sun' : 'bi-moon'"></i>
+    </button>
+    <button
+      class="toolbar-btn"
+      @click="handleToggleLocale"
+      :title="t.language"
+    >
+      <i class="bi" :class="i18nStore.locale === 'zh-CN' ? 'bi-translate' : 'bi-globe'"></i>
+    </button>
+    <a
+      class="toolbar-btn"
+      href="https://github.com/xxiixi/task-manager-web"
+      target="_blank"
+      rel="noopener noreferrer"
+      :title="t.github"
+    >
+      <i class="bi bi-github"></i>
+    </a>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useThemeStore } from '@/stores/theme'
+import { useI18nStore } from '@/stores/i18n'
+
+const themeStore = useThemeStore()
+const i18nStore = useI18nStore()
+const { t } = i18nStore
+
+const handleToggleTheme = () => {
+  themeStore.toggleTheme()
+}
+
+const handleToggleLocale = () => {
+  i18nStore.toggleLocale()
+}
+</script>
+
+<style scoped lang="less">
+@import '@/styles/variables.less';
+
+.header-toolbar {
+  position: fixed;
+  top: @spacing-md;
+  right: @spacing-md;
+  display: flex;
+  gap: @spacing-sm;
+  z-index: @z-index-fixed;
+}
+
+.toolbar-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: @border-radius-md;
+  border: none;
+  background: @bg-secondary;
+  color: @text-primary;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all @transition-fast;
+  text-decoration: none;
+  box-shadow: @shadow-sm;
+
+  &:hover {
+    background: @card-hover-bg;
+    transform: translateY(-2px);
+    box-shadow: @shadow-md;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  .bi {
+    font-size: 18px;
+  }
+}
+
+// 黑暗模式样式
+:global(.dark) .toolbar-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+</style>
+
