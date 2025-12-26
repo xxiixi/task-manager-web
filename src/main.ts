@@ -7,6 +7,7 @@ import router from './router'
 import './styles/index.less'
 // 导入 Bootstrap Icons（按需使用）
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import { useThemeStore } from './stores/theme'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -16,5 +17,8 @@ pinia.use(piniaPluginPersistedstate)
 
 app.use(pinia)
 app.use(router)
+
+// 初始化主题 store，确保 data-theme 属性在页面加载时就被设置
+useThemeStore()
 
 app.mount('#app')

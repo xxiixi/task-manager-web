@@ -45,12 +45,8 @@ const filters = computed(() => [
 .filters {
   display: flex;
   margin: @spacing-lg @spacing-xs;
-  color: @filter-inactive;
+  color: var(--filter-inactive);
   font-size: @font-size-sm;
-
-  html.dark & {
-    color: @text-tertiary-dark;
-  }
 
   .filter {
     margin-right: (@spacing-sm + @spacing-xs);
@@ -59,24 +55,15 @@ const filters = computed(() => [
     user-select: none;
 
     &:hover:not(.active) {
-      color: @filter-active;
+      color: var(--filter-active);
       transform: scale(1.1);
       opacity: 0.8;
-
-      html.dark & {
-        color: @text-primary-dark;
-        opacity: 0.9;
-      }
     }
 
     &.active {
-      color: @filter-active;
+      color: var(--filter-active);
       transform: scale(1.2);
       font-weight: @font-weight-medium;
-
-      html.dark & {
-        color: @text-primary-dark;
-      }
     }
   }
 }

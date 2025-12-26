@@ -10,8 +10,10 @@ export const useThemeStore = defineStore(
         const html = document.documentElement
         if (dark) {
           html.classList.add('dark')
+          html.setAttribute('data-theme', 'dark')
         } else {
           html.classList.remove('dark')
+          html.setAttribute('data-theme', 'light')
         }
       }
     }

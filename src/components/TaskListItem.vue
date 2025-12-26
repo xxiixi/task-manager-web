@@ -46,19 +46,14 @@ const handleDelete = (e: Event) => {
 @import '@/styles/variables.less';
 
 .task-item {
-  background: @card-bg;
+  background: var(--card-bg);
   padding: @spacing-md;
   border-radius: @border-radius-md;
-  color: @text-secondary;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: all @transition-base;
-
-  html.dark & {
-    background: @card-bg-dark;
-    color: @text-secondary-dark;
-  }
 
   &:hover {
     box-shadow: @shadow-sm;
@@ -91,12 +86,12 @@ const handleDelete = (e: Event) => {
       }
 
       &::before {
-        border: 1px solid @primary-color;
+        border: 1px solid var(--primary-color);
       }
 
       &::after {
         transition: @transition-base;
-        background: @primary-color;
+        background: var(--primary-color);
         transform: translate(1px, 1px) scale(0.8);
         opacity: 0;
       }
@@ -124,11 +119,7 @@ const handleDelete = (e: Event) => {
     label .task-content {
       text-decoration: line-through;
       font-style: italic;
-      color: @text-tertiary;
-
-      html.dark & {
-        color: @text-tertiary-dark;
-      }
+      color: var(--text-tertiary);
     }
   }
 
@@ -138,7 +129,7 @@ const handleDelete = (e: Event) => {
     border-radius: 50%;
     border: none;
     background: transparent;
-    color: @text-tertiary;
+    color: var(--text-tertiary);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -147,7 +138,7 @@ const handleDelete = (e: Event) => {
     opacity: 0;
 
     &:hover {
-      background: @error-color;
+      background: var(--error-color);
       color: white;
       transform: scale(1.1);
     }

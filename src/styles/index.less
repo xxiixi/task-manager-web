@@ -1,4 +1,6 @@
 @import './variables.less';
+@import './light.less';
+@import './dark.less';
 
 // 全局样式重置
 * {
@@ -11,16 +13,10 @@ body {
   font-family: @font-family;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: @bg-color;
-  color: @text-primary;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
   line-height: @line-height-normal;
   transition: background-color @transition-base, color @transition-base;
-}
-
-// 黑暗模式样式
-html.dark body {
-  background-color: @bg-color-dark;
-  color: @text-primary-dark;
 }
 
 #app {
@@ -38,27 +34,15 @@ html.dark body {
 }
 
 ::-webkit-scrollbar-track {
-  background: @bg-secondary;
-
-  html.dark & {
-    background: @bg-secondary-dark;
-  }
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: @border-color;
+  background: var(--border-color);
   border-radius: @border-radius-full;
 
   &:hover {
-    background: @border-hover;
-  }
-
-  html.dark & {
-    background: rgba(255, 255, 255, 0.2);
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
+    background: var(--border-hover);
   }
 }
 

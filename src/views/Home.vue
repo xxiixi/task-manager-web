@@ -74,12 +74,8 @@ main {
   display: grid;
   align-items: center;
   justify-items: center;
-  background: @bg-color;
+  background: var(--bg-color);
   transition: background-color @transition-base;
-
-  html.dark & {
-    background: @bg-color-dark;
-  }
 }
 
 .container {
@@ -90,24 +86,16 @@ main {
   box-shadow: @shadow-lg;
   border-radius: @border-radius-2xl;
   padding: 48px 28px;
-  background-color: @bg-secondary;
+  background-color: var(--bg-secondary);
   transition: background-color @transition-base;
-
-  html.dark & {
-    background-color: @bg-secondary-dark;
-  }
 }
 
 h1 {
   margin: @spacing-lg 0;
   font-size: @font-size-2xl;
-  color: @text-primary;
+  color: var(--text-primary);
   text-align: center;
   transition: color @transition-base;
-
-  html.dark & {
-    color: @text-primary-dark;
-  }
 }
 </style>
 

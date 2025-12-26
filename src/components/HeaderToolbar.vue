@@ -77,8 +77,8 @@ const handleToggleLocale = () => {
   height: 40px;
   border-radius: @border-radius-md;
   border: none;
-  background: @bg-secondary;
-  color: @text-primary;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -87,17 +87,8 @@ const handleToggleLocale = () => {
   text-decoration: none;
   box-shadow: @shadow-sm;
 
-  html.dark & {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.9);
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-  }
-
   &:hover {
-    background: @card-hover-bg;
+    background: var(--card-hover-bg);
     transform: translateY(-2px);
     box-shadow: @shadow-md;
   }

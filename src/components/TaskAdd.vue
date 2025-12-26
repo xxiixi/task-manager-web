@@ -17,7 +17,6 @@ import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTaskStore } from '../stores/task'
 import { useI18nStore } from '../stores/i18n'
-import type { TaskPriority } from '../types/task'
 
 const taskStore = useTaskStore()
 const i18nStore = useI18nStore()
@@ -54,20 +53,12 @@ const handleAddTask = () => {
     box-shadow: @shadow-input;
     width: 100%;
     font-size: @font-size-md;
-    color: @text-secondary;
+    background: var(--card-bg);
+    color: var(--text-secondary);
     font-family: @font-family;
 
     &::placeholder {
-      color: @text-tertiary;
-    }
-
-    html.dark & {
-      background: @card-bg-dark;
-      color: @text-secondary-dark;
-
-      &::placeholder {
-        color: @text-tertiary-dark;
-      }
+      color: var(--text-tertiary);
     }
   }
 
@@ -75,7 +66,7 @@ const handleAddTask = () => {
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    background: @gradient-primary;
+    background: linear-gradient(var(--primary-hover), var(--secondary-color));
     border: none;
     outline: none;
     color: white;
