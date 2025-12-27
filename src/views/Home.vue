@@ -23,12 +23,18 @@
           />
         </div>
         <div class="task-list-wrapper">
-        <TaskList
-          :tasks="filteredTasks"
-          @toggle-status="handleToggleStatus"
-          @delete="handleDelete"
-          @view-details="handleViewDetails"
-        />
+          <div v-if="filteredTasks.length === 0" class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p class="empty-title">{{ t?.noTasks || '暂无任务' }}</p>
+            <p class="empty-desc">{{ t?.noTasksDesc || '点击右上角按钮添加第一个任务' }}</p>
+          </div>
+          <TaskList
+            v-else
+            :tasks="filteredTasks"
+            @toggle-status="handleToggleStatus"
+            @delete="handleDelete"
+            @view-details="handleViewDetails"
+          />
         </div>
       </div>
       <TaskDetail
@@ -233,5 +239,38 @@ const handleCloseAddModal = () => {
       overflow-x: hidden;
       min-height: 0;
       margin-top: @spacing-md;
+    }
+
+    .empty-state {
+      background-color: var(--card-bg);
+      border-radius: @border-radius-2xl;
+      margin-left: @spacing-sm;
+      margin-right: @spacing-sm;
+      padding: @spacing-md;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      color: var(--text-tertiary);
+
+      i {
+        font-size: 55px;
+        opacity: 0.5;
+      }
+
+      .empty-title {
+        font-size: @font-size-md;
+        font-weight: @font-weight-medium;
+        color: var(--text-secondary);
+        margin-bottom: @spacing-sm;
+      }
+
+      .empty-desc {
+        font-size: @font-size-sm;
+        color: var(--text-tertiary);
+        margin-bottom: @spacing-2xl;
+      }
     }
   </style>

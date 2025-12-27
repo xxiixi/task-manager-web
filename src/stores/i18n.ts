@@ -50,7 +50,9 @@ const translations = {
     exportSuccess: '数据导出成功',
     importSuccess: '数据导入成功',
     importError: '数据导入失败',
-    confirmImport: '导入数据将覆盖当前所有任务，确定要继续吗？'
+    confirmImport: '导入数据将覆盖当前所有任务，确定要继续吗？',
+    noTasks: '暂无任务',
+    noTasksDesc: '点击右上角按钮添加第一个任务'
   },
   'en-US': {
     title: 'Task Manager',
@@ -98,7 +100,9 @@ const translations = {
     exportSuccess: 'Data exported successfully',
     importSuccess: 'Data imported successfully',
     importError: 'Failed to import data',
-    confirmImport: 'Importing data will overwrite all current tasks. Are you sure you want to continue?'
+    confirmImport: 'Importing data will overwrite all current tasks. Are you sure you want to continue?',
+    noTasks: 'No tasks yet',
+    noTasksDesc: 'Click the button in the top right to add your first task'
   }
 }
 
