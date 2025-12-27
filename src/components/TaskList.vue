@@ -43,7 +43,7 @@ const handleViewDetails = (id: string) => {
 
 .task-list {
   display: grid;
-  row-gap: 14px;
+  row-gap: 10px;
 }
 </style>
 

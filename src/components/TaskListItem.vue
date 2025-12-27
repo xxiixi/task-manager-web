@@ -104,7 +104,7 @@ const handleViewDetails = () => {
 
 .task-item {
   background: var(--card-bg);
-  padding: @spacing-md;
+  padding: @spacing-sm @spacing-md;
   border-radius: @border-radius-md;
   color: var(--text-secondary);
   display: flex;
@@ -113,6 +113,7 @@ const handleViewDetails = () => {
   transition: all @transition-base;
   cursor: pointer;
   margin-right: @spacing-sm;
+  margin-left: @spacing-xs;
 
   &:hover {
     box-shadow: @shadow-sm;

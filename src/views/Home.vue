@@ -1,29 +1,25 @@
 
 <template>
     <main>
+        <div class="task-add-section">
+              <TaskAdd @open="handleOpenAddModal" />
+        </div>
       <HeaderToolbar />
       <div class="container">
         <div class="title-section">
+
           <h1>{{ t?.title || 'Task Manager' }}</h1>
-          <TaskAdd @open="handleOpenAddModal" />
         </div>
         <div class="header-section">
-          <div class="search-container">
-            <input
-              type="text"
-              v-model="searchKeyword"
-              :placeholder="t?.searchPlaceholder || '搜索任务...'"
-              class="search-input"
-            />
-            <i class="bi bi-search search-icon"></i>
-          </div>
           <TaskFilter
             :selected="filter"
             :selected-category="categoryFilter"
             :selected-sort="sortBy"
+            :search-keyword="searchKeyword"
             @change-filter="handleFilterChange"
             @change-category="handleCategoryChange"
             @change-sort="handleSortChange"
+            @change-search="handleSearchChange"
           />
         </div>
         <div class="task-list-wrapper">
@@ -99,7 +95,7 @@ const handleToggleStatus = (id: string) => {
     }
     const newStatus = statusMap[task.status]
     taskStore.updateTask(id, { status: newStatus })
-    // 更新详情页显示的任务数据
+    // 更新详情页显示的任务数据（因为watch只监听task.id，替换对象不会触发编辑数据重置）
     if (selectedTask.value && selectedTask.value.id === id) {
       const updatedTask = taskStore.getTaskById(id)
       if (updatedTask) {
@@ -141,6 +137,11 @@ const handleSortChange = (value: 'updatedTime' | 'createdTime') => {
   sortBy.value = value
 }
 
+// 切换搜索关键词
+const handleSearchChange = (value: string) => {
+  searchKeyword.value = value
+}
+
 // 查看任务详情
 const handleViewDetails = (id: string) => {
   const task = taskStore.getTaskById(id)
@@ -178,6 +179,7 @@ const handleCloseAddModal = () => {
       justify-items: center;
       background: var(--bg-color);
       transition: background-color @transition-base;
+      position: relative;
     }
     
     .container {
@@ -197,60 +199,31 @@ const handleCloseAddModal = () => {
     
     .title-section {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      flex-direction: column;
       justify-content: space-between;
-      margin: @spacing-lg 0;
+      margin-bottom: @spacing-md;
+      margin-top: @spacing-lg;
+      margin-left: @spacing-sm;
       flex-shrink: 0;
     }
     
     h1 {
-      margin: 0;
       font-size: @font-size-2xl;
       color: var(--text-primary);
       text-align: left;
       transition: color @transition-base;
       flex: 1;
     }
-    
+
+    .task-add-section {
+      position: absolute;
+      bottom: 890px;
+      right: 330px;
+      z-index: 1000;
+    }
     .header-section {
       flex-shrink: 0;
-    }
-    
-    .search-container {
-      position: relative;
-      margin: @spacing-md 0;
-      display: flex;
-      align-items: center;
-    
-      .search-input {
-        width: 100%;
-        padding: 12px 40px 12px 16px;
-        border-radius: @border-radius-xl;
-        border: none;
-        outline: none;
-        box-shadow: @shadow-input;
-        font-size: @font-size-md;
-        background: var(--card-bg);
-        color: var(--text-secondary);
-        font-family: @font-family;
-        transition: all @transition-base;
-    
-        &::placeholder {
-          color: var(--text-tertiary);
-        }
-    
-        &:focus {
-          box-shadow: @shadow-md;
-        }
-      }
-    
-      .search-icon {
-        position: absolute;
-        right: 12px;
-        color: var(--text-tertiary);
-        font-size: @font-size-lg;
-        pointer-events: none;
-      }
     }
     
     .task-list-wrapper {

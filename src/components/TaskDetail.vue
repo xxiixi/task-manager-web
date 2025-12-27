@@ -125,15 +125,15 @@ const { t, locale } = storeToRefs(i18nStore)
 
 const editTitle = ref('')
 const editDescription = ref('')
-const editCategory = ref<TaskCategory>('😅')
+const editCategory = ref<TaskCategory>('😶')
 const titleInputRef = ref<HTMLInputElement | null>(null)
 
 // 预设的10个分类 emoji
 const categoryOptions: TaskCategory[] = ['😅', '🤯', '🤩', '😶', '🥺', '‼️', '❓', '💗', '💡', '⏰']
 
-// 当任务变化时，初始化编辑数据
-watch(() => props.task, () => {
-  if (props.task) {
+// 当任务变化时，初始化编辑数据（只在task.id变化时重新初始化，避免状态切换时重置编辑内容）
+watch(() => props.task?.id, (newId, oldId) => {
+  if (props.task && newId && newId !== oldId) {
     editTitle.value = props.task.title
     editDescription.value = props.task.description || ''
     editCategory.value = props.task.category

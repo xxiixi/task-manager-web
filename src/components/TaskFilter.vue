@@ -11,8 +11,19 @@
         >
           {{ filter.label }}
         </span>
-
+      </div>
+    </div>
     <div class="action-buttons">
+      <div class="search-container">
+        <input
+          type="text"
+          :value="searchKeyword"
+          @input="handleSearchInput"
+          :placeholder="t.searchPlaceholder || '搜索任务...'"
+          class="search-input"
+        />
+        <i class="bi bi-search search-icon"></i>
+      </div>
       <div class="sort-wrapper" ref="sortFilterRef">
         <span
           class="filter sort-btn"
@@ -43,7 +54,7 @@
         class="filter category-filter-btn"
         @click="toggleCategoryDropdown"
       >
-        <i class="bi bi-funnel-fill"></i>
+        <i class="bi bi-funnel"></i>
         {{ t.filterByCategory }}
       </span>
       <div v-if="showCategoryDropdown" class="category-dropdown">
@@ -63,8 +74,6 @@
         >
           {{ category }}
         </div>
-      </div>
-      </div>
     </div>
   </div>
     </div>
@@ -84,12 +93,14 @@ const props = defineProps<{
   selected: FilterValue
   selectedCategory?: TaskCategory | 'all'
   selectedSort?: 'updatedTime' | 'createdTime'
+  searchKeyword?: string
 }>()
 
 const emit = defineEmits<{
   'change-filter': [value: FilterValue]
   'change-category': [value: TaskCategory | 'all']
   'change-sort': [value: 'updatedTime' | 'createdTime']
+  'change-search': [value: string]
 }>()
 
 const i18nStore = useI18nStore()
@@ -151,6 +162,11 @@ const selectSort = (sort: 'updatedTime' | 'createdTime') => {
   closeSortDropdown()
 }
 
+const handleSearchInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  emit('change-search', target.value)
+}
+
 // 点击外部关闭下拉菜单
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
@@ -178,7 +194,7 @@ onUnmounted(() => {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  gap: @spacing-md;
+  gap: @spacing-xs;
   margin: 0 @spacing-sm;
   color: var(--filter-inactive);
   font-size: @font-size-sm;
@@ -259,8 +275,45 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     gap: @spacing-sm;
-    align-self: flex-end;
-    margin-left: auto;
+    width: 100%;
+    margin-top: @spacing-sm;
+  }
+
+  .search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+
+    .search-input {
+      padding: 8px 32px 8px 12px;
+      border-radius: @border-radius-md;
+      border: 1px solid var(--border-color);
+      outline: none;
+      box-shadow: @shadow-input;
+      font-size: @font-size-sm;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      font-family: @font-family;
+      transition: all @transition-base;
+
+      &::placeholder {
+        color: var(--text-tertiary);
+      }
+
+      &:focus {
+        box-shadow: @shadow-md;
+        border-color: var(--border-hover);
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 10px;
+      color: var(--text-tertiary);
+      font-size: @font-size-sm;
+      pointer-events: none;
+    }
   }
 
   .sort-wrapper {

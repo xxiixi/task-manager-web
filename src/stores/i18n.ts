@@ -89,7 +89,7 @@ const translations = {
     noDueDate: 'No due date',
     noTags: 'No tags',
     close: 'Close',
-    filterByCategory: 'Filter by Category',
+    filterByCategory: ' Category',
     sortBy: 'Sort',
     sortByUpdatedTime: 'Last Updated',
     sortByCreatedTime: 'Created Time',
