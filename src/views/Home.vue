@@ -9,7 +9,7 @@ import TaskList from '../components/TaskList.vue'
 import TaskFilter from '../components/TaskFilter.vue'
 import HeaderToolbar from '../components/HeaderToolbar.vue'
 import TaskDetail from '../components/TaskDetail.vue'
-import type { TaskStatus } from '../types/task'
+import type { TaskStatus, TaskPriority } from '../types/task'
 import type { Task } from '../types/task'
 
 const i18nStore = useI18nStore()
@@ -40,6 +40,13 @@ const handleToggleStatus = (id: string) => {
     }
     const newStatus = statusMap[task.status]
     taskStore.updateTask(id, { status: newStatus })
+    // 更新详情页显示的任务数据
+    if (selectedTask.value && selectedTask.value.id === id) {
+      const updatedTask = taskStore.getTaskById(id)
+      if (updatedTask) {
+        selectedTask.value = updatedTask
+      }
+    }
   }
 }
 
@@ -49,7 +56,7 @@ const handleDelete = (id: string) => {
 }
 
 // 更新任务
-const handleUpdate = (id: string, updates: { title: string; description?: string }) => {
+const handleUpdate = (id: string, updates: { title: string; description?: string; status?: TaskStatus; priority?: TaskPriority }) => {
   taskStore.updateTask(id, updates)
   // 更新详情页显示的任务数据
   if (selectedTask.value && selectedTask.value.id === id) {
@@ -76,6 +83,18 @@ const handleViewDetails = (id: string) => {
 // 关闭详情弹窗
 const handleCloseDetail = () => {
   selectedTask.value = null
+}
+
+// 切换优先级
+const handleTogglePriority = (id: string, priority: TaskPriority) => {
+  taskStore.updateTask(id, { priority })
+  // 更新详情页显示的任务数据
+  if (selectedTask.value && selectedTask.value.id === id) {
+    const updatedTask = taskStore.getTaskById(id)
+    if (updatedTask) {
+      selectedTask.value = updatedTask
+    }
+  }
 }
 
 // 打开添加任务弹窗
@@ -112,7 +131,13 @@ const handleCloseAddModal = () => {
         @view-details="handleViewDetails"
       />
     </div>
-    <TaskDetail :task="selectedTask" @close="handleCloseDetail" @update="handleUpdate" />
+    <TaskDetail
+      :task="selectedTask"
+      @close="handleCloseDetail"
+      @update="handleUpdate"
+      @toggle-status="handleToggleStatus"
+      @toggle-priority="handleTogglePriority"
+    />
     <TaskAddModal :is-open="isAddModalOpen" @close="handleCloseAddModal" />
   </main>
 </template>

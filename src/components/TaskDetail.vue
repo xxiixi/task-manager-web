@@ -43,14 +43,24 @@
         <div class="detail-row">
           <div class="detail-section">
             <label class="detail-label">{{ t.taskStatus }}</label>
-            <span class="status-tag" :class="`status-${task.status}`">
+            <span
+              class="status-tag"
+              :class="`status-${task.status}`"
+              @click="handleToggleStatus"
+              :title="getStatusTitle"
+            >
               {{ getStatusText }}
             </span>
           </div>
 
           <div class="detail-section">
             <label class="detail-label">{{ t.taskPriority }}</label>
-            <span class="priority-tag" :class="`priority-${task.priority}`">
+            <span
+              class="priority-tag"
+              :class="`priority-${task.priority}`"
+              @click="handleTogglePriority"
+              :title="getPriorityTitle"
+            >
               {{ getPriorityText }}
             </span>
           </div>
@@ -109,7 +119,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import type { Task } from '../types/task'
+import type { Task, TaskStatus, TaskPriority } from '../types/task'
 import { useI18nStore } from '../stores/i18n'
 
 const props = defineProps<{
@@ -118,7 +128,9 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: []
-  update: [id: string, updates: { title: string; description?: string }]
+  update: [id: string, updates: { title: string; description?: string; status?: TaskStatus; priority?: TaskPriority }]
+  toggleStatus: [id: string]
+  togglePriority: [id: string, priority: TaskPriority]
 }>()
 
 const i18nStore = useI18nStore()
@@ -164,6 +176,14 @@ const getPriorityText = computed(() => {
     default:
       return t.value.priorityNormal
   }
+})
+
+const getStatusTitle = computed(() => {
+  return `${t.value.pending} / ${t.value.inProgress} / ${t.value.completed}`
+})
+
+const getPriorityTitle = computed(() => {
+  return `${t.value.priorityNormal} / ${t.value.priorityImportant} / ${t.value.priorityUrgent}`
 })
 
 const formatDate = (timestamp: number) => {
@@ -222,6 +242,22 @@ const handleCancel = () => {
   editTitle.value = props.task.title
   editDescription.value = props.task.description || ''
   isEditing.value = false
+}
+
+const handleToggleStatus = () => {
+  if (!props.task) return
+  emit('toggleStatus', props.task.id)
+}
+
+const handleTogglePriority = () => {
+  if (!props.task) return
+  const priorityMap: Record<TaskPriority, TaskPriority> = {
+    low: 'medium',
+    medium: 'high',
+    high: 'low',
+  }
+  const newPriority = priorityMap[props.task.priority]
+  emit('togglePriority', props.task.id, newPriority)
 }
 </script>
 
@@ -486,6 +522,18 @@ const handleCancel = () => {
   font-size: @font-size-sm;
   font-weight: @font-weight-medium;
   white-space: nowrap;
+  cursor: pointer;
+  transition: all @transition-fast;
+  user-select: none;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: @shadow-sm;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .status-tag {
@@ -521,6 +569,7 @@ const handleCancel = () => {
     color: var(--priority-high-color);
   }
 }
+
 
 .tags-container {
   display: flex;
