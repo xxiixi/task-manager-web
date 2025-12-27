@@ -6,6 +6,7 @@
       :task="task"
       @toggle-status="handleToggleStatus"
       @delete="handleDelete"
+      @view-details="handleViewDetails"
     />
   </div>
 </template>
@@ -21,6 +22,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   toggleStatus: [id: string]
   delete: [id: string]
+  viewDetails: [id: string]
 }>()
 
 const handleToggleStatus = (id: string) => {
@@ -29,6 +31,10 @@ const handleToggleStatus = (id: string) => {
 
 const handleDelete = (id: string) => {
   emit('delete', id)
+}
+
+const handleViewDetails = (id: string) => {
+  emit('viewDetails', id)
 }
 </script>
 

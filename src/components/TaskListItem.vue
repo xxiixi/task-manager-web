@@ -1,19 +1,23 @@
 <template>
-  <div class="task-item" :class="{ done: task.status === 'completed' }">
+  <div class="task-item" :class="{ done: task.status === 'completed' }" @click="handleViewDetails">
     <div class="task-main">
       <span
         class="status-tag"
         :class="`status-${task.status}`"
-        @click="handleToggle"
+        @click.stop="handleToggle"
         :title="getStatusTitle"
       >
         {{ getStatusText }}
       </span>
-      <span class="task-content">{{ task.title }}</span>
+      <span class="task-content">
+        {{ task.title }}
+      </span>
     </div>
-    <button class="delete-btn" @click="handleDelete" :title="t.deleteTask">
-      <span class="delete-icon">×</span>
-    </button>
+    <div class="action-buttons">
+      <button class="delete-btn" @click.stop="handleDelete" :title="t.deleteTask">
+        <span class="delete-icon">×</span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -30,6 +34,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   toggleStatus: [id: string]
   delete: [id: string]
+  viewDetails: [id: string]
 }>()
 
 const i18nStore = useI18nStore()
@@ -61,6 +66,10 @@ const handleDelete = (e: Event) => {
   e.stopPropagation()
   emit('delete', props.task.id)
 }
+
+const handleViewDetails = () => {
+  emit('viewDetails', props.task.id)
+}
 </script>
 
 <style scoped lang="less">
@@ -75,13 +84,11 @@ const handleDelete = (e: Event) => {
   align-items: center;
   justify-content: space-between;
   transition: all @transition-base;
+  cursor: pointer;
 
   &:hover {
     box-shadow: @shadow-sm;
-
-    .delete-btn {
-      opacity: 1;
-    }
+    transform: translateY(-1px);
   }
 
   .task-main {
@@ -131,45 +138,56 @@ const handleDelete = (e: Event) => {
       }
     }
 
-    .task-content {
-      flex: 1;
-    }
-  }
-
-  &.done {
-    .task-main .task-content {
-      text-decoration: line-through;
-      font-style: italic;
-      color: var(--text-tertiary);
-    }
-  }
-
-  .delete-btn {
-    width: @spacing-lg;
-    height: @spacing-lg;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    color: var(--text-tertiary);
+  .task-content {
+    flex: 1;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all @transition-fast;
-    opacity: 0;
+    user-select: none;
 
     &:hover {
-      background: var(--error-color);
-      color: white;
-      transform: scale(1.1);
-    }
-
-    .delete-icon {
-      font-size: @font-size-lg;
-      line-height: 1;
-      font-weight: @font-weight-bold;
+      opacity: 0.8;
     }
   }
+}
+
+&.done {
+  .task-main .task-content {
+    text-decoration: line-through;
+    font-style: italic;
+    color: var(--text-tertiary);
+  }
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: @spacing-xs;
+}
+
+.delete-btn {
+  width: @spacing-lg;
+  height: @spacing-lg;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all @transition-fast;
+
+  &:hover {
+    transform: scale(1.1);
+    background: var(--error-color);
+    color: white;
+  }
+
+  .delete-icon {
+    font-size: @font-size-lg;
+    line-height: 1;
+    font-weight: @font-weight-bold;
+  }
+}
 }
 </style>
 

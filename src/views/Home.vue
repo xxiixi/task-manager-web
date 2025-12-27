@@ -7,7 +7,9 @@ import TaskAdd from '../components/TaskAdd.vue'
 import TaskList from '../components/TaskList.vue'
 import TaskFilter from '../components/TaskFilter.vue'
 import HeaderToolbar from '../components/HeaderToolbar.vue'
+import TaskDetail from '../components/TaskDetail.vue'
 import type { TaskStatus } from '../types/task'
+import type { Task } from '../types/task'
 
 const i18nStore = useI18nStore()
 const { t } = storeToRefs(i18nStore)
@@ -15,6 +17,7 @@ const { t } = storeToRefs(i18nStore)
 const taskStore = useTaskStore()
 const filter = ref<'all' | TaskStatus>('all')
 const searchKeyword = ref('')
+const selectedTask = ref<Task | null>(null)
 
 // 筛选任务（支持状态筛选和关键词搜索）
 const filteredTasks = computed(() => {
@@ -43,9 +46,34 @@ const handleDelete = (id: string) => {
   taskStore.deleteTask(id)
 }
 
+// 更新任务
+const handleUpdate = (id: string, updates: { title: string; description?: string }) => {
+  taskStore.updateTask(id, updates)
+  // 更新详情页显示的任务数据
+  if (selectedTask.value && selectedTask.value.id === id) {
+    const updatedTask = taskStore.getTaskById(id)
+    if (updatedTask) {
+      selectedTask.value = updatedTask
+    }
+  }
+}
+
 // 切换筛选
 const handleFilterChange = (value: 'all' | TaskStatus) => {
   filter.value = value
+}
+
+// 查看任务详情
+const handleViewDetails = (id: string) => {
+  const task = taskStore.getTaskById(id)
+  if (task) {
+    selectedTask.value = task
+  }
+}
+
+// 关闭详情弹窗
+const handleCloseDetail = () => {
+  selectedTask.value = null
 }
 </script>
 
@@ -69,8 +97,10 @@ const handleFilterChange = (value: 'all' | TaskStatus) => {
         :tasks="filteredTasks"
         @toggle-status="handleToggleStatus"
         @delete="handleDelete"
+        @view-details="handleViewDetails"
       />
     </div>
+    <TaskDetail :task="selectedTask" @close="handleCloseDetail" @update="handleUpdate" />
   </main>
 </template>
 
