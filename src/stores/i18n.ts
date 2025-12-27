@@ -20,7 +20,8 @@ const translations = {
     github: 'GitHub',
     priorityNormal: '普通',
     priorityImportant: '重要',
-    priorityUrgent: '紧急'
+    priorityUrgent: '紧急',
+    searchPlaceholder: '搜索任务...'
   },
   'en-US': {
     title: 'Task Manager',
@@ -38,7 +39,8 @@ const translations = {
     github: 'GitHub',
     priorityNormal: 'Normal',
     priorityImportant: 'Important',
-    priorityUrgent: 'Urgent'
+    priorityUrgent: 'Urgent',
+    searchPlaceholder: 'Search tasks...'
   }
 }
 

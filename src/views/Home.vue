@@ -14,19 +14,14 @@ const { t } = storeToRefs(i18nStore)
 
 const taskStore = useTaskStore()
 const filter = ref<'all' | TaskStatus>('all')
+const searchKeyword = ref('')
 
-// 筛选任务
+// 筛选任务（支持状态筛选和关键词搜索）
 const filteredTasks = computed(() => {
-  switch (filter.value) {
-    case 'completed':
-      return taskStore.tasks.filter((task) => task.status === 'completed')
-    case 'pending':
-      return taskStore.tasks.filter((task) => task.status === 'pending')
-    case 'in-progress':
-      return taskStore.tasks.filter((task) => task.status === 'in-progress')
-    default:
-      return taskStore.tasks
-  }
+  return taskStore.filteredTasks({
+    status: filter.value === 'all' ? undefined : filter.value,
+    keyword: searchKeyword.value.trim() || undefined,
+  })
 })
 
 // 切换任务状态（在 pending -> in-progress -> completed -> pending 之间循环）
@@ -60,6 +55,15 @@ const handleFilterChange = (value: 'all' | TaskStatus) => {
     <div class="container">
       <h1>{{ t?.title || 'Task Manager' }}</h1>
       <TaskAdd />
+      <div class="search-container">
+        <input
+          type="text"
+          v-model="searchKeyword"
+          :placeholder="t?.searchPlaceholder || '搜索任务...'"
+          class="search-input"
+        />
+        <i class="bi bi-search search-icon"></i>
+      </div>
       <TaskFilter :selected="filter" @change-filter="handleFilterChange" />
       <TaskList
         :tasks="filteredTasks"
@@ -101,6 +105,43 @@ h1 {
   color: var(--text-primary);
   text-align: center;
   transition: color @transition-base;
+}
+
+.search-container {
+  position: relative;
+  margin: @spacing-md 0;
+  display: flex;
+  align-items: center;
+
+  .search-input {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    border-radius: @border-radius-xl;
+    border: none;
+    outline: none;
+    box-shadow: @shadow-input;
+    font-size: @font-size-md;
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    font-family: @font-family;
+    transition: all @transition-base;
+
+    &::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    &:focus {
+      box-shadow: @shadow-md;
+    }
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 12px;
+    color: var(--text-tertiary);
+    font-size: @font-size-lg;
+    pointer-events: none;
+  }
 }
 </style>
 
