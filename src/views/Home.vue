@@ -1,11 +1,11 @@
 
 <template>
     <main>
-        <div class="task-add-section">
-              <TaskAdd @open="handleOpenAddModal" />
-        </div>
       <HeaderToolbar />
       <div class="container">
+        <div class="task-add-section">
+          <TaskAdd @open="handleOpenAddModal" />
+        </div>
         <div class="title-section">
 
           <h1>{{ t?.title || 'Task Manager' }}</h1>
@@ -177,7 +177,7 @@ const handleCloseAddModal = () => {
       display: grid;
       align-items: center;
       justify-items: center;
-      background: var(--bg-color);
+      background: var(--bg-color);  
       transition: background-color @transition-base;
       position: relative;
     }
@@ -186,7 +186,7 @@ const handleCloseAddModal = () => {
       width: 90%;
       max-width: 700px;
       min-width: 300px;
-      height: 80vh;
+      height: 70vh;
       box-shadow: @shadow-lg;
       border-radius: @border-radius-2xl;
       padding: 25px 30px;
@@ -194,7 +194,8 @@ const handleCloseAddModal = () => {
       transition: background-color @transition-base;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      overflow: visible;
+      position: relative;
     }
     
     .title-section {
@@ -218,8 +219,8 @@ const handleCloseAddModal = () => {
 
     .task-add-section {
       position: absolute;
-      bottom: 890px;
-      right: 330px;
+      top: -25px;
+      right: -24px;
       z-index: 1000;
     }
     .header-section {
