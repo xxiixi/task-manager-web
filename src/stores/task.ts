@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { Task, TaskStatus, TaskPriority, TaskFilters } from '@/types/task'
+import type { Task, TaskStatus, TaskCategory, TaskFilters } from '@/types/task'
 
 export const useTaskStore = defineStore(
   'task',
@@ -87,9 +87,9 @@ export const useTaskStore = defineStore(
           result = result.filter((task) => task.status === filters.status)
         }
 
-        // 优先级筛选
-        if (filters.priority && filters.priority !== 'all') {
-          result = result.filter((task) => task.priority === filters.priority)
+        // 分类筛选
+        if (filters.category && filters.category !== 'all') {
+          result = result.filter((task) => task.category === filters.category)
         }
 
         // 标签筛选

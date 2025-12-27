@@ -18,9 +18,7 @@ const translations = {
     switchToEnglish: '切换到 English',
     switchToChinese: '切换到 中文',
     github: 'GitHub',
-    priorityNormal: '普通',
-    priorityImportant: '重要',
-    priorityUrgent: '紧急',
+    taskCategory: '分类',
     searchPlaceholder: '搜索任务...',
     editTask: '编辑任务',
     save: '保存',
@@ -32,7 +30,8 @@ const translations = {
     taskTitle: '标题',
     taskDescription: '描述',
     taskStatus: '状态',
-    taskPriority: '优先级',
+    taskCategory: '分类',
+    taskPriority: '分类',
     createdAt: '创建时间',
     updatedAt: '更新时间',
     dueDate: '截止日期',
@@ -43,7 +42,8 @@ const translations = {
     noDescription: '无描述',
     noDueDate: '无截止日期',
     noTags: '无标签',
-    close: '关闭'
+    close: '关闭',
+    filterByCategory: '分类筛选'
   },
   'en-US': {
     title: 'Task Manager',
@@ -59,9 +59,7 @@ const translations = {
     switchToEnglish: 'Switch to English',
     switchToChinese: 'Switch to Chinese',
     github: 'GitHub',
-    priorityNormal: 'Normal',
-    priorityImportant: 'Important',
-    priorityUrgent: 'Urgent',
+    taskCategory: 'Category',
     searchPlaceholder: 'Search tasks...',
     editTask: 'Edit Task',
     save: 'Save',
@@ -73,7 +71,8 @@ const translations = {
     taskTitle: 'Title',
     taskDescription: 'Description',
     taskStatus: 'Status',
-    taskPriority: 'Priority',
+    taskCategory: 'Category',
+    taskPriority: 'Category',
     createdAt: 'Created At',
     updatedAt: 'Updated At',
     dueDate: 'Due Date',
@@ -84,7 +83,8 @@ const translations = {
     noDescription: 'No description',
     noDueDate: 'No due date',
     noTags: 'No tags',
-    close: 'Close'
+    close: 'Close',
+    filterByCategory: 'Filter by Category'
   }
 }
 

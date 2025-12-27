@@ -4,9 +4,9 @@
 export type TaskStatus = 'pending' | 'in-progress' | 'completed'
 
 /**
- * 任务优先级枚举
+ * 任务分类（使用 emoji）
  */
-export type TaskPriority = 'low' | 'medium' | 'high'
+export type TaskCategory = '😅' | '🤯' | '🤩' | '😶' | '🥺' | '‼️' | '❓' | '💗' | '💡' | '⏰'
 
 /**
  * 任务数据模型
@@ -20,8 +20,8 @@ export interface Task {
   description?: string
   /** 任务状态 */
   status: TaskStatus
-  /** 优先级 */
-  priority: TaskPriority
+  /** 分类（emoji） */
+  category: TaskCategory
   /** 标签 */
   tags?: string[]
   /** 创建时间戳 */
@@ -38,8 +38,8 @@ export interface Task {
 export interface TaskFilters {
   /** 状态筛选 */
   status?: TaskStatus | 'all'
-  /** 优先级筛选 */
-  priority?: TaskPriority | 'all'
+  /** 分类筛选 */
+  category?: TaskCategory | 'all'
   /** 标签筛选 */
   tags?: string[]
   /** 关键词搜索 */
