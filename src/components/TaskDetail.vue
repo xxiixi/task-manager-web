@@ -59,18 +59,27 @@
         <div class="detail-row">
           <div class="detail-section">
             <label class="detail-label">{{ t.createdAt }}</label>
-            <div class="detail-value time">{{ formatDate(task.createdAt) }}</div>
+            <div class="detail-value time">
+              <span class="time-prefix">{{ t.createdAtPrefix }}</span>
+              {{ formatDate(task.createdAt) }}
+            </div>
           </div>
 
           <div class="detail-section">
             <label class="detail-label">{{ t.updatedAt }}</label>
-            <div class="detail-value time">{{ formatDate(task.updatedAt) }}</div>
+            <div class="detail-value time">
+              <span class="time-prefix">{{ t.updatedAtPrefix }}</span>
+              {{ formatDate(task.updatedAt) }}
+            </div>
           </div>
         </div>
 
         <div class="detail-section" v-if="task.dueDate">
           <label class="detail-label">{{ t.dueDate }}</label>
-          <div class="detail-value time">{{ formatDate(task.dueDate) }}</div>
+          <div class="detail-value time">
+            <span class="time-prefix">{{ t.dueDatePrefix }}</span>
+            {{ formatDate(task.dueDate) }}
+          </div>
         </div>
 
         <div class="detail-section" v-if="task.tags && task.tags.length > 0">
@@ -357,6 +366,16 @@ const handleCancel = () => {
   &.time {
     font-family: 'Monaco', 'Menlo', monospace;
     color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: @spacing-xs;
+
+    .time-prefix {
+      font-family: @font-family;
+      font-size: @font-size-sm;
+      color: var(--text-tertiary);
+      font-weight: @font-weight-normal;
+    }
   }
 }
 

@@ -9,9 +9,12 @@
       >
         {{ getStatusText }}
       </span>
-      <span class="task-content">
-        {{ task.title }}
-      </span>
+      <div class="task-content-wrapper">
+        <span class="task-content">
+          {{ task.title }}
+        </span>
+        <span class="task-date">{{ formatDate(task.updatedAt) }}</span>
+      </div>
     </div>
     <div class="action-buttons">
       <button class="delete-btn" @click.stop="handleDelete" :title="t.deleteTask">
@@ -38,7 +41,28 @@ const emit = defineEmits<{
 }>()
 
 const i18nStore = useI18nStore()
-const { t } = storeToRefs(i18nStore)
+const { t, locale } = storeToRefs(i18nStore)
+
+const formatDate = (timestamp: number) => {
+  const date = new Date(timestamp)
+  const isZh = locale.value === 'zh-CN'
+  
+  if (isZh) {
+    return date.toLocaleString('zh-CN', {
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  } else {
+    return date.toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+}
 
 const getStatusText = computed(() => {
   switch (props.task.status) {
@@ -138,14 +162,30 @@ const handleViewDetails = () => {
       }
     }
 
-  .task-content {
+  .task-content-wrapper {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+    min-width: 0;
+  }
+
+  .task-content {
     cursor: pointer;
     user-select: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &:hover {
       opacity: 0.8;
     }
+  }
+
+  .task-date {
+    font-size: @font-size-xs;
+    color: var(--text-tertiary);
+    font-family: 'Monaco', 'Menlo', monospace;
   }
 }
 
