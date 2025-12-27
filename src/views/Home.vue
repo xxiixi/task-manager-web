@@ -1,3 +1,50 @@
+
+<template>
+    <main>
+      <HeaderToolbar />
+      <div class="container">
+        <div class="title-section">
+          <h1>{{ t?.title || 'Task Manager' }}</h1>
+          <TaskAdd @open="handleOpenAddModal" />
+        </div>
+        <div class="header-section">
+          <div class="search-container">
+            <input
+              type="text"
+              v-model="searchKeyword"
+              :placeholder="t?.searchPlaceholder || '搜索任务...'"
+              class="search-input"
+            />
+            <i class="bi bi-search search-icon"></i>
+          </div>
+          <TaskFilter
+            :selected="filter"
+            :selected-category="categoryFilter"
+            :selected-sort="sortBy"
+            @change-filter="handleFilterChange"
+            @change-category="handleCategoryChange"
+            @change-sort="handleSortChange"
+          />
+        </div>
+        <div class="task-list-wrapper">
+        <TaskList
+          :tasks="filteredTasks"
+          @toggle-status="handleToggleStatus"
+          @delete="handleDelete"
+          @view-details="handleViewDetails"
+        />
+        </div>
+      </div>
+      <TaskDetail
+        :task="selectedTask"
+        @close="handleCloseDetail"
+        @update="handleUpdate"
+        @toggle-status="handleToggleStatus"
+      />
+      <TaskAddModal :is-open="isAddModalOpen" @close="handleCloseAddModal" />
+    </main>
+  </template>
+    
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -18,17 +65,27 @@ const { t } = storeToRefs(i18nStore)
 const taskStore = useTaskStore()
 const filter = ref<'all' | TaskStatus>('all')
 const categoryFilter = ref<TaskCategory | 'all'>('all')
+const sortBy = ref<'updatedTime' | 'createdTime'>('updatedTime')
 const searchKeyword = ref('')
 const selectedTask = ref<Task | null>(null)
 const isAddModalOpen = ref(false)
 
 // 筛选任务（支持状态筛选、分类筛选和关键词搜索）
 const filteredTasks = computed(() => {
-  return taskStore.filteredTasks({
+  let tasks = taskStore.filteredTasks({
     status: filter.value === 'all' ? undefined : filter.value,
     category: categoryFilter.value === 'all' ? undefined : categoryFilter.value,
     keyword: searchKeyword.value.trim() || undefined,
   })
+
+  // 排序
+  const sortedTasks = [...tasks]
+  if (sortBy.value === 'updatedTime') {
+    sortedTasks.sort((a, b) => b.updatedAt - a.updatedAt)
+  } else if (sortBy.value === 'createdTime') {
+    sortedTasks.sort((a, b) => b.createdAt - a.createdAt)
+  }
+  return sortedTasks
 })
 
 // 切换任务状态（在 pending -> in-progress -> completed -> pending 之间循环）
@@ -79,6 +136,11 @@ const handleCategoryChange = (value: TaskCategory | 'all') => {
   categoryFilter.value = value
 }
 
+// 切换排序
+const handleSortChange = (value: 'updatedTime' | 'createdTime') => {
+  sortBy.value = value
+}
+
 // 查看任务详情
 const handleViewDetails = (id: string) => {
   const task = taskStore.getTaskById(id)
@@ -104,132 +166,98 @@ const handleCloseAddModal = () => {
 }
 </script>
 
-<template>
-  <main>
-    <HeaderToolbar />
-    <div class="container">
-      <h1>{{ t?.title || 'Task Manager' }}</h1>
-      <div class="header-section">
-        <TaskAdd @open="handleOpenAddModal" />
-        <div class="search-container">
-          <input
-            type="text"
-            v-model="searchKeyword"
-            :placeholder="t?.searchPlaceholder || '搜索任务...'"
-            class="search-input"
-          />
-          <i class="bi bi-search search-icon"></i>
-        </div>
-        <TaskFilter
-          :selected="filter"
-          :selected-category="categoryFilter"
-          @change-filter="handleFilterChange"
-          @change-category="handleCategoryChange"
-        />
-      </div>
-      <div class="task-list-wrapper">
-      <TaskList
-        :tasks="filteredTasks"
-        @toggle-status="handleToggleStatus"
-        @delete="handleDelete"
-        @view-details="handleViewDetails"
-      />
-      </div>
-    </div>
-    <TaskDetail
-      :task="selectedTask"
-      @close="handleCloseDetail"
-      @update="handleUpdate"
-      @toggle-status="handleToggleStatus"
-    />
-    <TaskAddModal :is-open="isAddModalOpen" @close="handleCloseAddModal" />
-  </main>
-</template>
 
 <style scoped lang="less">
-@import '@/styles/variables.less';
-
-main {
-  width: 100vw;
-  min-height: 100vh;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-  background: var(--bg-color);
-  transition: background-color @transition-base;
-}
-
-.container {
-  width: 90%;
-  max-width: 800px;
-  min-width: 400px;
-  height: 660px;
-  box-shadow: @shadow-lg;
-  border-radius: @border-radius-2xl;
-  padding: 48px 28px;
-  background-color: var(--bg-secondary);
-  transition: background-color @transition-base;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-h1 {
-  margin: @spacing-lg 0;
-  font-size: @font-size-2xl;
-  color: var(--text-primary);
-  text-align: center;
-  transition: color @transition-base;
-  flex-shrink: 0;
-}
-
-.header-section {
-  flex-shrink: 0;
-}
-
-.search-container {
-  position: relative;
-  margin: @spacing-md 0;
-  display: flex;
-  align-items: center;
-
-  .search-input {
-    width: 100%;
-    padding: 12px 40px 12px 16px;
-    border-radius: @border-radius-xl;
-    border: none;
-    outline: none;
-    box-shadow: @shadow-input;
-    font-size: @font-size-md;
-    background: var(--card-bg);
-    color: var(--text-secondary);
-    font-family: @font-family;
-    transition: all @transition-base;
-
-    &::placeholder {
-      color: var(--text-tertiary);
+    @import '@/styles/variables.less';
+    
+    main {
+      width: 100vw;
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      background: var(--bg-color);
+      transition: background-color @transition-base;
     }
-
-    &:focus {
-      box-shadow: @shadow-md;
+    
+    .container {
+      width: 90%;
+      max-width: 700px;
+      min-width: 300px;
+      height: 80vh;
+      box-shadow: @shadow-lg;
+      border-radius: @border-radius-2xl;
+      padding: 25px 30px;
+      background-color: var(--bg-secondary);
+      transition: background-color @transition-base;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
-  }
-
-  .search-icon {
-    position: absolute;
-    right: 12px;
-    color: var(--text-tertiary);
-    font-size: @font-size-lg;
-    pointer-events: none;
-  }
-}
-
-.task-list-wrapper {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height: 0;
-  margin-top: @spacing-md;
-}
-</style>
-
+    
+    .title-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: @spacing-lg 0;
+      flex-shrink: 0;
+    }
+    
+    h1 {
+      margin: 0;
+      font-size: @font-size-2xl;
+      color: var(--text-primary);
+      text-align: left;
+      transition: color @transition-base;
+      flex: 1;
+    }
+    
+    .header-section {
+      flex-shrink: 0;
+    }
+    
+    .search-container {
+      position: relative;
+      margin: @spacing-md 0;
+      display: flex;
+      align-items: center;
+    
+      .search-input {
+        width: 100%;
+        padding: 12px 40px 12px 16px;
+        border-radius: @border-radius-xl;
+        border: none;
+        outline: none;
+        box-shadow: @shadow-input;
+        font-size: @font-size-md;
+        background: var(--card-bg);
+        color: var(--text-secondary);
+        font-family: @font-family;
+        transition: all @transition-base;
+    
+        &::placeholder {
+          color: var(--text-tertiary);
+        }
+    
+        &:focus {
+          box-shadow: @shadow-md;
+        }
+      }
+    
+      .search-icon {
+        position: absolute;
+        right: 12px;
+        color: var(--text-tertiary);
+        font-size: @font-size-lg;
+        pointer-events: none;
+      }
+    }
+    
+    .task-list-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-height: 0;
+      margin-top: @spacing-md;
+    }
+  </style>

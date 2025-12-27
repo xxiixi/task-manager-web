@@ -234,19 +234,20 @@ const handleViewDetails = () => {
   width: @spacing-lg;
   height: @spacing-lg;
   border-radius: 50%;
-  border: none;
+  border: 1.5px solid transparent;
   background: transparent;
   color: var(--text-tertiary);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all @transition-fast;
+  transition: all @transition-base;
 
   &:hover {
     transform: scale(1.1);
-    background: var(--error-color);
-    color: white;
+    border-color: var(--error-color);
+    background: var(--error-color-bg);
+    color: var(--error-color);
   }
 
   .delete-icon {

@@ -29,29 +29,59 @@ const handleOpenModal = () => {
   align-items: center;
   justify-content: center;
   gap: @spacing-xs;
-  width: 100%;
-  padding: 16px;
-  border-radius: @border-radius-xl;
-  border: none;
-  background: linear-gradient(var(--primary-hover), var(--secondary-color));
-  color: white;
-  font-size: @font-size-md;
+  padding: 10px 20px;
+  border-radius: @border-radius-full;
+  border: 1.5px solid var(--primary-color);
+  background: var(--primary-color-bg);
+  color: var(--primary-color);
+  font-size: @font-size-sm;
   font-weight: @font-weight-medium;
   cursor: pointer;
-  transition: all @transition-fast;
-  box-shadow: @shadow-input;
+  transition: all @transition-base;
+  box-shadow: 0 2px 4px var(--primary-color-shadow-light);
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 
   i {
-    font-size: @font-size-lg;
+    font-size: @font-size-md;
+    transition: transform @transition-base;
+  }
+
+  // 背景渐变动画层
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    opacity: 0;
+    transition: opacity @transition-base;
+    z-index: -1;
   }
 
   &:hover {
+    color: white;
+    border-color: var(--primary-hover);
+    background: transparent;
     transform: translateY(-2px);
-    box-shadow: @shadow-md;
+    box-shadow: 0 4px 12px var(--primary-color-shadow-strong);
+
+    &::before {
+      opacity: 1;
+    }
+
+    i {
+      transform: rotate(90deg);
+    }
   }
 
   &:active {
     transform: translateY(0);
+    box-shadow: 0 2px 6px var(--primary-color-shadow-medium);
   }
 }
 </style>

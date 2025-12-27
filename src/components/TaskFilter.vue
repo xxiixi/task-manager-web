@@ -1,15 +1,44 @@
 <template>
   <div class="filters">
-    <span
-      v-for="filter in filters"
-      :key="filter.value"
-      @click="$emit('change-filter', filter.value)"
-      class="filter"
-      :class="{ active: selected === filter.value }"
-    >
-      {{ filter.label }}
-    </span>
-    <div class="category-filter-wrapper" ref="categoryFilterRef">
+    <div class="filter-group">
+      <div class="filter-tabs">
+        <span
+          v-for="filter in filters"
+          :key="filter.value"
+          @click="$emit('change-filter', filter.value)"
+          class="filter"
+          :class="{ active: selected === filter.value }"
+        >
+          {{ filter.label }}
+        </span>
+
+    <div class="action-buttons">
+      <div class="sort-wrapper" ref="sortFilterRef">
+        <span
+          class="filter sort-btn"
+          @click="toggleSortDropdown"
+        >
+          <i class="bi bi-sort-down"></i>
+          {{ t.sortBy }}
+        </span>
+        <div v-if="showSortDropdown" class="sort-dropdown">
+          <div
+            class="sort-option"
+            :class="{ active: selectedSort === 'updatedTime' }"
+            @click="selectSort('updatedTime')"
+          >
+            {{ t.sortByUpdatedTime }}
+          </div>
+          <div
+            class="sort-option"
+            :class="{ active: selectedSort === 'createdTime' }"
+            @click="selectSort('createdTime')"
+          >
+            {{ t.sortByCreatedTime }}
+          </div>
+        </div>
+      </div>
+      <div class="category-filter-wrapper" ref="categoryFilterRef">
       <span
         class="filter category-filter-btn"
         @click="toggleCategoryDropdown"
@@ -35,6 +64,9 @@
           {{ category }}
         </div>
       </div>
+      </div>
+    </div>
+  </div>
     </div>
   </div>
 </template>
@@ -51,11 +83,13 @@ type FilterValue = 'all' | TaskStatus
 const props = defineProps<{
   selected: FilterValue
   selectedCategory?: TaskCategory | 'all'
+  selectedSort?: 'updatedTime' | 'createdTime'
 }>()
 
 const emit = defineEmits<{
   'change-filter': [value: FilterValue]
   'change-category': [value: TaskCategory | 'all']
+  'change-sort': [value: 'updatedTime' | 'createdTime']
 }>()
 
 const i18nStore = useI18nStore()
@@ -63,8 +97,11 @@ const { t } = storeToRefs(i18nStore)
 
 const taskStore = useTaskStore()
 const showCategoryDropdown = ref(false)
+const showSortDropdown = ref(false)
 const categoryFilterRef = ref<HTMLElement | null>(null)
+const sortFilterRef = ref<HTMLElement | null>(null)
 const selectedCategory = computed(() => props.selectedCategory || 'all')
+const selectedSort = computed(() => props.selectedSort || 'updatedTime')
 
 // 获取已使用的分类（去重）
 const usedCategories = computed(() => {
@@ -84,6 +121,9 @@ const filters = computed(() => [
 
 const toggleCategoryDropdown = () => {
   showCategoryDropdown.value = !showCategoryDropdown.value
+  if (showCategoryDropdown.value) {
+    showSortDropdown.value = false
+  }
 }
 
 const closeCategoryDropdown = () => {
@@ -95,11 +135,30 @@ const selectCategory = (category: TaskCategory | 'all') => {
   closeCategoryDropdown()
 }
 
+const toggleSortDropdown = () => {
+  showSortDropdown.value = !showSortDropdown.value
+  if (showSortDropdown.value) {
+    showCategoryDropdown.value = false
+  }
+}
+
+const closeSortDropdown = () => {
+  showSortDropdown.value = false
+}
+
+const selectSort = (sort: 'updatedTime' | 'createdTime') => {
+  emit('change-sort', sort)
+  closeSortDropdown()
+}
+
 // 点击外部关闭下拉菜单
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
   if (categoryFilterRef.value && !categoryFilterRef.value.contains(target)) {
     closeCategoryDropdown()
+  }
+  if (sortFilterRef.value && !sortFilterRef.value.contains(target)) {
+    closeSortDropdown()
   }
 }
 
@@ -117,33 +176,152 @@ onUnmounted(() => {
 
 .filters {
   display: flex;
-  align-items: center;
-  margin: @spacing-lg @spacing-xs;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: @spacing-md;
+  margin: 0 @spacing-sm;
   color: var(--filter-inactive);
   font-size: @font-size-sm;
 
-  .filter {
-    margin-right: (@spacing-sm + @spacing-xs);
-    transition: @transition-slow;
-    cursor: pointer;
-    user-select: none;
-
-    &:hover:not(.active) {
-      color: var(--filter-active);
-      transform: scale(1.1);
-      opacity: 0.8;
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-sm;
+    flex: 1;
+    position: relative;
+    width: 100%;
+  }
+  
+  .filter-tabs {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-bottom: @spacing-xs;
+    margin-left: -@spacing-sm;
+    margin-right: -@spacing-sm;
+    padding-left: @spacing-sm;
+    padding-right: @spacing-sm;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--border-color);
     }
 
-    &.active {
-      color: var(--filter-active);
-      transform: scale(1.2);
-      font-weight: @font-weight-medium;
+    .filter {
+      padding: @spacing-sm @spacing-md;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      transition: all @transition-base;
+      cursor: pointer;
+      user-select: none;
+      color: var(--filter-inactive);
+      position: relative;
+      white-space: nowrap;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -(@spacing-xs + 1px);
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--filter-active-underline);
+        opacity: 0;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: opacity @transition-base, transform @transition-base;
+      }
+
+      &:hover:not(.active) {
+        color: var(--filter-active);
+        transition: color @transition-fast;
+      }
+
+      &.active {
+        color: var(--filter-active);
+        transition: color @transition-base;
+
+        &::after {
+          opacity: 1;
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: @spacing-sm;
+    align-self: flex-end;
+    margin-left: auto;
+  }
+
+  .sort-wrapper {
+    position: relative;
+
+    .sort-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: @spacing-xs;
+      padding: @spacing-xs @spacing-sm;
+      border-radius: @border-radius-md;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all @transition-base;
+
+      i {
+        font-size: @font-size-sm;
+      }
+
+      &:hover {
+        background: var(--card-hover-bg);
+        border-color: var(--border-hover);
+      }
+    }
+
+    .sort-dropdown {
+      position: absolute;
+      top: calc(100% + @spacing-xs);
+      left: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: @border-radius-md;
+      box-shadow: @shadow-lg;
+      min-width: 140px;
+      z-index: @z-index-dropdown;
+      padding: @spacing-xs;
+
+      .sort-option {
+        padding: @spacing-sm;
+        cursor: pointer;
+        transition: all @transition-fast;
+        border-radius: @border-radius-sm;
+        font-size: @font-size-sm;
+        color: var(--text-primary);
+
+        &:hover:not(.active) {
+          background: var(--card-hover-bg);
+        }
+
+        &.active {
+          background: var(--bg-secondary);
+          color: var(--primary-color);
+          font-weight: @font-weight-medium;
+        }
+      }
     }
   }
 
   .category-filter-wrapper {
     position: relative;
-    margin-left: auto;
 
     .category-filter-btn {
       display: inline-flex;
@@ -153,6 +331,8 @@ onUnmounted(() => {
       border-radius: @border-radius-md;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all @transition-base;
 
       i {
         font-size: @font-size-sm;
