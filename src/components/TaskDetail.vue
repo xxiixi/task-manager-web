@@ -4,9 +4,6 @@
       <div class="task-detail-header">
         <h2>{{ t.taskDetails }}</h2>
         <div class="header-actions">
-          <button v-if="!isEditing" class="edit-btn" @click="handleStartEdit" :title="t.editTask">
-            <i class="bi bi-pencil"></i>
-          </button>
           <button class="close-btn" @click="handleClose" :title="t.close">
             <i class="bi bi-x-lg"></i>
           </button>
@@ -16,7 +13,6 @@
         <div class="detail-section">
           <label class="detail-label">{{ t.taskTitle }}</label>
           <input
-            v-if="isEditing"
             ref="titleInputRef"
             v-model="editTitle"
             type="text"
@@ -24,63 +20,55 @@
             @keyup.enter="handleSave"
             @keyup.esc="handleCancel"
           />
-          <div v-else class="detail-value">{{ task.title }}</div>
         </div>
 
         <div class="detail-section">
           <label class="detail-label">{{ t.taskDescription }}</label>
           <textarea
-            v-if="isEditing"
             v-model="editDescription"
             class="detail-textarea"
             rows="4"
           ></textarea>
-          <div v-else class="detail-value description">
-            {{ task.description || t.noDescription }}
+        </div>
+
+        <div class="detail-section">
+          <label class="detail-label">{{ t.taskStatus }}</label>
+          <span
+            class="status-tag"
+            :class="`status-${task.status}`"
+            @click="handleToggleStatus"
+            :title="getStatusTitle"
+          >
+            {{ getStatusText }}
+          </span>
+        </div>
+
+        <div class="detail-section">
+          <label class="detail-label">{{ t.taskCategory }}</label>
+          <div class="category-options">
+            <button
+              v-for="category in categoryOptions"
+              :key="category"
+              class="category-option"
+              :class="{ active: editCategory === category }"
+              @click="editCategory = category"
+            >
+              {{ category }}
+            </button>
           </div>
         </div>
 
-        <div class="detail-row">
-          <div class="detail-section">
-            <label class="detail-label">{{ t.taskStatus }}</label>
-            <span
-              class="status-tag"
-              :class="`status-${task.status}`"
-              @click="handleToggleStatus"
-              :title="getStatusTitle"
-            >
-              {{ getStatusText }}
-            </span>
-          </div>
-
-          <div class="detail-section">
-            <label class="detail-label">{{ t.taskPriority }}</label>
-            <span
-              class="priority-tag"
-              :class="`priority-${task.priority}`"
-              @click="handleTogglePriority"
-              :title="getPriorityTitle"
-            >
-              {{ getPriorityText }}
-            </span>
+        <div class="detail-section">
+          <div class="detail-value time">
+            <span class="time-prefix">{{ t.createdAtPrefix }}</span>
+            {{ formatDate(task.createdAt) }}
           </div>
         </div>
 
-        <div class="detail-row">
-          <div class="detail-section">
-            <label class="detail-label">{{ t.createdAt }}</label>
-            <div class="detail-value time">
-              <span class="time-prefix">{{ t.createdAtPrefix }}</span>
-              {{ formatDate(task.createdAt) }}
-            </div>
-          </div>
-
-          <div class="detail-section">
-            <label class="detail-label">{{ t.updatedAt }}</label>
-            <div class="detail-value time">
-              <span class="time-prefix">{{ t.updatedAtPrefix }}</span>
-              {{ formatDate(task.updatedAt) }}
-            </div>
+        <div class="detail-section">
+          <div class="detail-value time">
+            <span class="time-prefix">{{ t.updatedAtPrefix }}</span>
+            {{ formatDate(task.updatedAt) }}
           </div>
         </div>
 
@@ -101,7 +89,7 @@
           </div>
         </div>
 
-        <div v-if="isEditing" class="edit-actions">
+        <div class="edit-actions">
           <button class="save-btn" @click="handleSave" :title="t.save">
             <i class="bi bi-check-lg"></i>
             <span>{{ t.save }}</span>
@@ -119,7 +107,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import type { Task, TaskStatus, TaskPriority } from '../types/task'
+import type { Task, TaskStatus, TaskCategory } from '../types/task'
 import { useI18nStore } from '../stores/i18n'
 
 const props = defineProps<{
@@ -128,25 +116,31 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: []
-  update: [id: string, updates: { title: string; description?: string; status?: TaskStatus; priority?: TaskPriority }]
+  update: [id: string, updates: { title: string; description?: string; status?: TaskStatus; category?: TaskCategory }]
   toggleStatus: [id: string]
-  togglePriority: [id: string, priority: TaskPriority]
 }>()
 
 const i18nStore = useI18nStore()
 const { t, locale } = storeToRefs(i18nStore)
 
-const isEditing = ref(false)
 const editTitle = ref('')
 const editDescription = ref('')
+const editCategory = ref<TaskCategory>('😅')
 const titleInputRef = ref<HTMLInputElement | null>(null)
 
-// 当任务变化时，重置编辑状态
+// 预设的10个分类 emoji
+const categoryOptions: TaskCategory[] = ['😅', '🤯', '🤩', '😶', '🥺', '‼️', '❓', '💗', '💡', '⏰']
+
+// 当任务变化时，初始化编辑数据
 watch(() => props.task, () => {
   if (props.task) {
     editTitle.value = props.task.title
     editDescription.value = props.task.description || ''
-    isEditing.value = false
+    editCategory.value = props.task.category
+    nextTick(() => {
+      titleInputRef.value?.focus()
+      titleInputRef.value?.select()
+    })
   }
 }, { immediate: true })
 
@@ -164,27 +158,10 @@ const getStatusText = computed(() => {
   }
 })
 
-const getPriorityText = computed(() => {
-  if (!props.task) return ''
-  switch (props.task.priority) {
-    case 'low':
-      return t.value.priorityNormal
-    case 'medium':
-      return t.value.priorityImportant
-    case 'high':
-      return t.value.priorityUrgent
-    default:
-      return t.value.priorityNormal
-  }
-})
-
 const getStatusTitle = computed(() => {
   return `${t.value.pending} / ${t.value.inProgress} / ${t.value.completed}`
 })
 
-const getPriorityTitle = computed(() => {
-  return `${t.value.priorityNormal} / ${t.value.priorityImportant} / ${t.value.priorityUrgent}`
-})
 
 const formatDate = (timestamp: number) => {
   const date = new Date(timestamp)
@@ -210,19 +187,7 @@ const formatDate = (timestamp: number) => {
 }
 
 const handleClose = () => {
-  isEditing.value = false
   emit('close')
-}
-
-const handleStartEdit = () => {
-  if (!props.task) return
-  editTitle.value = props.task.title
-  editDescription.value = props.task.description || ''
-  isEditing.value = true
-  nextTick(() => {
-    titleInputRef.value?.focus()
-    titleInputRef.value?.select()
-  })
 }
 
 const handleSave = () => {
@@ -232,32 +197,19 @@ const handleSave = () => {
     emit('update', props.task.id, {
       title: trimmedTitle,
       description: editDescription.value.trim() || undefined,
+      category: editCategory.value,
     })
-    isEditing.value = false
+    emit('close')
   }
 }
 
 const handleCancel = () => {
-  if (!props.task) return
-  editTitle.value = props.task.title
-  editDescription.value = props.task.description || ''
-  isEditing.value = false
+  emit('close')
 }
 
 const handleToggleStatus = () => {
   if (!props.task) return
   emit('toggleStatus', props.task.id)
-}
-
-const handleTogglePriority = () => {
-  if (!props.task) return
-  const priorityMap: Record<TaskPriority, TaskPriority> = {
-    low: 'medium',
-    medium: 'high',
-    high: 'low',
-  }
-  const newPriority = priorityMap[props.task.priority]
-  emit('togglePriority', props.task.id, newPriority)
 }
 </script>
 
@@ -290,8 +242,7 @@ const handleTogglePriority = () => {
 .task-detail-modal {
   background: var(--card-bg);
   border-radius: @border-radius-xl;
-  width: 90%;
-  max-width: 600px;
+  max-width: 700px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: @shadow-xl;
@@ -329,7 +280,6 @@ const handleTogglePriority = () => {
     gap: @spacing-xs;
   }
 
-  .edit-btn,
   .close-btn {
     width: 32px;
     height: 32px;
@@ -345,18 +295,6 @@ const handleTogglePriority = () => {
 
     &:hover {
       transform: scale(1.1);
-    }
-  }
-
-  .edit-btn {
-    &:hover {
-      background: var(--primary-color);
-      color: white;
-    }
-  }
-
-  .close-btn {
-    &:hover {
       background: var(--text-tertiary);
       color: white;
     }
@@ -485,20 +423,20 @@ const handleTogglePriority = () => {
 }
 
 .save-btn {
-  background: #f06292;
+  background: var(--primary-hover);
   color: white;
 
   &:hover {
-    background: #e91e63;
+    background: var(--primary-active);
   }
 }
 
 .cancel-btn {
-  background: #9ca3af;
+  background: var(--text-tertiary);
   color: white;
 
   &:hover {
-    background: #ef4444;
+    background: var(--error-color);
   }
 }
 
@@ -515,7 +453,7 @@ const handleTogglePriority = () => {
 }
 
 .status-tag,
-.priority-tag {
+.category-tag {
   display: inline-block;
   padding: 6px 12px;
   border-radius: @border-radius-full;
@@ -553,20 +491,57 @@ const handleTogglePriority = () => {
   }
 }
 
-.priority-tag {
-  &.priority-low {
-    background: var(--priority-low-bg);
-    color: var(--priority-low-color);
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 32px;
+  font-size: @font-size-xl;
+  background: transparent;
+  border: 2px solid var(--border-color);
+  padding: 0;
+}
+
+.category-options {
+  display: flex;
+  gap: @spacing-sm;
+  flex-wrap: wrap;
+}
+
+.category-option {
+  flex: 0 0 auto;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border-radius: @border-radius-md;
+  border: 2px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: @font-size-xl;
+  cursor: pointer;
+  transition: all @transition-fast;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover:not(.active) {
+    border-color: var(--primary-color);
+    transform: translateY(-1px) scale(1.05);
   }
 
-  &.priority-medium {
-    background: var(--priority-medium-bg);
-    color: var(--priority-medium-color);
-  }
+  &.active {
+    border-color: var(--primary-color);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    transform: scale(1.1);
 
-  &.priority-high {
-    background: var(--priority-high-bg);
-    color: var(--priority-high-color);
+    &:hover {
+      // hover 时边框变粗，颜色保持粉色，但大小不变
+      border-width: 3px;
+      border-color: var(--primary-color);
+      transform: scale(1.1);
+    }
   }
 }
 
