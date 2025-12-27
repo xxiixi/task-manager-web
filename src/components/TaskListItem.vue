@@ -112,6 +112,7 @@ const handleViewDetails = () => {
   justify-content: space-between;
   transition: all @transition-base;
   cursor: pointer;
+  margin-right: @spacing-sm;
 
   &:hover {
     box-shadow: @shadow-sm;

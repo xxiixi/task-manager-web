@@ -141,6 +141,46 @@ export const useTaskStore = defineStore(
       }
     })
 
+    /**
+     * 导出任务数据
+     */
+    function exportData() {
+      const data = {
+        tasks: tasks.value,
+      }
+      const json = JSON.stringify(data, null, 2)
+      const blob = new Blob([json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+      link.href = url
+      link.download = `task-manager-export-${timestamp}.json`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+    }
+
+    /**
+     * 导入任务数据
+     */
+    function importData(importedTasks: Task[]) {
+      // 验证数据格式
+      if (!Array.isArray(importedTasks)) {
+        throw new Error('无效的数据格式：任务数据必须是数组')
+      }
+
+      // 验证每个任务的必要字段
+      for (const task of importedTasks) {
+        if (!task.id || !task.title || !task.status || !task.category) {
+          throw new Error('无效的数据格式：任务缺少必要字段')
+        }
+      }
+
+      // 清空现有任务并导入新任务
+      tasks.value = importedTasks
+    }
+
     return {
       tasks,
       addTask,
@@ -150,6 +190,8 @@ export const useTaskStore = defineStore(
       getTaskById,
       filteredTasks,
       taskStats,
+      exportData,
+      importData,
     }
   },
   {

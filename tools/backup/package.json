@@ -1,0 +1,22 @@
+{
+	"name": "task-manager-backup-tool",
+	"version": "1.0.0",
+	"description": "数据备份及恢复工具",
+	"type": "module",
+	"main": "index.js",
+	"bin": {
+		"task-backup": "./bin/cli.js"
+	},
+	"scripts": {
+		"backup": "node bin/cli.js backup",
+		"restore": "node bin/cli.js restore",
+		"list": "node bin/cli.js list",
+		"delete": "node bin/cli.js delete"
+	},
+	"dependencies": {
+		"commander": "^12.1.0",
+		"chalk": "^5.3.0",
+		"ora": "^8.1.1"
+	}
+}
+

@@ -1,0 +1,3 @@
+# 此文件用于确保 backups 目录被 Git 追踪
+# 备份文件 (*.json) 已被 .gitignore 忽略
+

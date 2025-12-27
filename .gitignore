@@ -75,6 +75,12 @@ out/
 # TypeScript
 *.tsbuildinfo
 
+# Backup files
+backups/*.json
+!backups/.gitkeep
+tools/backup/backups/*.json
+!tools/backup/backups/.gitkeep
+
 # Lock files (optional - uncomment if you want to ignore them)
 # package-lock.json
 # yarn.lock

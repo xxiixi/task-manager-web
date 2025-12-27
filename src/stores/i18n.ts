@@ -30,8 +30,6 @@ const translations = {
     taskTitle: '标题',
     taskDescription: '描述',
     taskStatus: '状态',
-    taskCategory: '分类',
-    taskPriority: '分类',
     createdAt: '创建时间',
     updatedAt: '更新时间',
     dueDate: '截止日期',
@@ -43,7 +41,13 @@ const translations = {
     noDueDate: '无截止日期',
     noTags: '无标签',
     close: '关闭',
-    filterByCategory: '分类筛选'
+    filterByCategory: '分类筛选',
+    exportData: '导出数据',
+    importData: '导入数据',
+    exportSuccess: '数据导出成功',
+    importSuccess: '数据导入成功',
+    importError: '数据导入失败',
+    confirmImport: '导入数据将覆盖当前所有任务，确定要继续吗？'
   },
   'en-US': {
     title: 'Task Manager',
@@ -71,8 +75,6 @@ const translations = {
     taskTitle: 'Title',
     taskDescription: 'Description',
     taskStatus: 'Status',
-    taskCategory: 'Category',
-    taskPriority: 'Category',
     createdAt: 'Created At',
     updatedAt: 'Updated At',
     dueDate: 'Due Date',
@@ -84,7 +86,13 @@ const translations = {
     noDueDate: 'No due date',
     noTags: 'No tags',
     close: 'Close',
-    filterByCategory: 'Filter by Category'
+    filterByCategory: 'Filter by Category',
+    exportData: 'Export Data',
+    importData: 'Import Data',
+    exportSuccess: 'Data exported successfully',
+    importSuccess: 'Data imported successfully',
+    importError: 'Failed to import data',
+    confirmImport: 'Importing data will overwrite all current tasks. Are you sure you want to continue?'
   }
 }
 

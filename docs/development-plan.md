@@ -28,7 +28,7 @@ interface Task {
   title: string           // 任务标题
   description?: string    // 任务描述
   status: 'pending' | 'in-progress' | 'completed'  // 任务状态
-  priority: 'low' | 'medium' | 'high'  // 优先级
+  category: TaskCategory  // 分类（emoji）
   tags?: string[]         // 标签
   createdAt: number       // 创建时间戳
   updatedAt: number       // 更新时间戳
@@ -47,7 +47,7 @@ interface Task {
 - `deleteTask(id)`: 删除任务
 - `toggleTaskStatus(id)`: 切换任务状态
 - `getTaskById(id)`: 根据 ID 获取任务
-- `filterTasks(filters)`: 筛选任务 (按状态、优先级、标签、日期范围)
+- `filterTasks(filters)`: 筛选任务 (按状态、分类、标签、日期范围)
 
 **持久化配置**:
 - 使用 `pinia-plugin-persistedstate` 自动持久化到 `localStorage`
@@ -58,7 +58,7 @@ interface Task {
 
 **筛选条件**:
 - 状态筛选: 全部 / 待办 / 进行中 / 已完成
-- 优先级筛选: 全部 / 低 / 中 / 高
+- 分类筛选: 全部 / 各分类（emoji）
 - 标签筛选: 多选标签
 - 日期筛选: 今日 / 本周 / 本月 / 自定义范围
 - 关键词搜索: 标题和描述全文搜索
@@ -234,33 +234,6 @@ node tools/restore.js --input ./backups/tasks-2024-01-01.json
 - 使用 `commander` 或 `yargs` 处理命令行参数
 - 数据格式验证和错误处理
 - 支持备份文件时间戳命名
-
-## 五、加分项实现方案
-
-### 5.1 Three.js 点云渲染
-
-**功能**: 在任务管理页面中嵌入一个 3D 点云可视化组件
-
-**实现方案**:
-- 安装 `three` 依赖
-- 创建 `PointCloudViewer.vue` 组件
-- 使用 WebGL 渲染不同颜色的点云
-- 点云数据可以基于任务数据生成 (例如: 每个任务对应一个点，颜色表示优先级)
-
-**文件**: `src/components/PointCloudViewer.vue`
-
-### 5.2 Paper.js 五角星绘制
-
-**功能**: 在图片上传/展示功能中，使用 Paper.js 在图片中心绘制五角星
-
-**实现方案**:
-- 安装 `paper` 依赖
-- 创建 `ImageStarOverlay.vue` 组件
-- 支持图片上传或选择
-- 使用 Paper.js 在 Canvas 上绘制五角星
-- 五角星可以自定义颜色、大小、旋转角度
-
-**文件**: `src/components/ImageStarOverlay.vue`
 
 ### 5.3 UI/UX 优化
 
