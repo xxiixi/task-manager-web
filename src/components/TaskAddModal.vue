@@ -32,19 +32,16 @@
         </div>
 
         <div class="form-section">
-          <label class="form-label">{{ t.taskPriority }}</label>
-          <div class="priority-options">
+          <label class="form-label">{{ t.taskCategory }}</label>
+          <div class="category-options">
             <button
-              v-for="priority in priorityOptions"
-              :key="priority.value"
-              class="priority-option"
-              :class="[
-                `priority-${priority.value}`,
-                { active: selectedPriority === priority.value }
-              ]"
-              @click="selectedPriority = priority.value"
+              v-for="category in categoryOptions"
+              :key="category"
+              class="category-option"
+              :class="{ active: selectedCategory === category }"
+              @click="selectedCategory = category"
             >
-              {{ priority.label }}
+              {{ category }}
             </button>
           </div>
         </div>
@@ -68,7 +65,7 @@ import { ref, computed, nextTick, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTaskStore } from '../stores/task'
 import { useI18nStore } from '../stores/i18n'
-import type { TaskPriority } from '../types/task'
+import type { TaskCategory } from '../types/task'
 
 const props = defineProps<{
   isOpen: boolean
@@ -80,25 +77,22 @@ const emit = defineEmits<{
 
 const taskStore = useTaskStore()
 const i18nStore = useI18nStore()
-const { t, locale } = storeToRefs(i18nStore)
+const { t } = storeToRefs(i18nStore)
 
 const taskTitle = ref('')
 const taskDescription = ref('')
-const selectedPriority = ref<TaskPriority>('low')
+const selectedCategory = ref<TaskCategory>('😅')
 const titleInputRef = ref<HTMLInputElement | null>(null)
 
-const priorityOptions = computed(() => [
-  { value: 'low' as TaskPriority, label: t.value.priorityNormal },
-  { value: 'medium' as TaskPriority, label: t.value.priorityImportant },
-  { value: 'high' as TaskPriority, label: t.value.priorityUrgent },
-])
+// 预设的10个分类 emoji
+const categoryOptions: TaskCategory[] = ['😅', '🤯', '🤩', '😶', '🥺', '‼️', '❓', '💗', '💡', '⏰']
 
 // 当弹窗打开时，聚焦到标题输入框
 watch(() => props.isOpen, (newVal) => {
   if (newVal) {
     taskTitle.value = ''
     taskDescription.value = ''
-    selectedPriority.value = 'low'
+    selectedCategory.value = '😅'
     nextTick(() => {
       titleInputRef.value?.focus()
     })
@@ -116,7 +110,7 @@ const handleSave = () => {
       title: trimmedTitle,
       description: taskDescription.value.trim() || undefined,
       status: 'pending',
-      priority: selectedPriority.value,
+      category: selectedCategory.value,
     })
     handleClose()
   }
@@ -261,45 +255,37 @@ const handleSave = () => {
   line-height: @line-height-relaxed;
 }
 
-.priority-options {
+.category-options {
   display: flex;
   gap: @spacing-sm;
+  flex-wrap: wrap;
 }
 
-.priority-option {
-  flex: 1;
-  padding: 10px 16px;
+.category-option {
+  flex: 0 0 auto;
+  width: 50px;
+  height: 50px;
+  padding: 0;
   border-radius: @border-radius-md;
   border: 2px solid var(--border-color);
   background: var(--bg-secondary);
   color: var(--text-secondary);
-  font-size: @font-size-sm;
-  font-weight: @font-weight-medium;
+  font-size: @font-size-xl;
   cursor: pointer;
   transition: all @transition-fast;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     border-color: var(--primary-color);
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.05);
   }
 
   &.active {
-    color: white;
-  }
-
-  &.priority-low.active {
-    background: var(--priority-low-color);
-    border-color: var(--priority-low-color);
-  }
-
-  &.priority-medium.active {
-    background: var(--priority-medium-color);
-    border-color: var(--priority-medium-color);
-  }
-
-  &.priority-high.active {
-    background: var(--priority-high-color);
-    border-color: var(--priority-high-color);
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    transform: scale(1.1);
   }
 }
 
@@ -338,20 +324,20 @@ const handleSave = () => {
 }
 
 .save-btn {
-  background: #f06292;
+  background: var(--primary-hover);
   color: white;
 
   &:hover {
-    background: #e91e63;
+    background: var(--primary-active);
   }
 }
 
 .cancel-btn {
-  background: #9ca3af;
+  background: var(--text-tertiary);
   color: white;
 
   &:hover {
-    background: #ef4444;
+    background: var(--error-color);
   }
 }
 </style>

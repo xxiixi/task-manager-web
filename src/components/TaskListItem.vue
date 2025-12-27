@@ -4,10 +4,13 @@
       <span
         class="status-tag"
         :class="`status-${task.status}`"
-        @click.stop="handleToggle"
+        @click.stop="handleToggleStatus"
         :title="getStatusTitle"
       >
         {{ getStatusText }}
+      </span>
+      <span class="category-emoji">
+        {{ task.category }}
       </span>
       <div class="task-content-wrapper">
         <span class="task-content">
@@ -81,7 +84,7 @@ const getStatusTitle = computed(() => {
   return `${t.value.pending} / ${t.value.inProgress} / ${t.value.completed}`
 })
 
-const handleToggle = (e: Event) => {
+const handleToggleStatus = (e: Event) => {
   e.stopPropagation()
   emit('toggleStatus', props.task.id)
 }
@@ -162,6 +165,14 @@ const handleViewDetails = () => {
       }
     }
 
+    .category-emoji {
+      font-size: 1.33em;
+      line-height: 1;
+      opacity: 1;
+      filter: none;
+      color: var(--text-primary);
+    }
+
   .task-content-wrapper {
     flex: 1;
     display: flex;
@@ -201,6 +212,21 @@ const handleViewDetails = () => {
   display: flex;
   align-items: center;
   gap: @spacing-xs;
+}
+
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: @border-radius-full;
+  font-size: @font-size-xl;
+  user-select: none;
+  flex-shrink: 0;
+  background: transparent;
+  border: 2px solid var(--border-color);
+  box-sizing: border-box;
 }
 
 .delete-btn {
