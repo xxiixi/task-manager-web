@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useTaskStore } from '../stores/task'
 import { useI18nStore } from '../stores/i18n'
 import TaskAdd from '../components/TaskAdd.vue'
+import TaskAddModal from '../components/TaskAddModal.vue'
 import TaskList from '../components/TaskList.vue'
 import TaskFilter from '../components/TaskFilter.vue'
 import HeaderToolbar from '../components/HeaderToolbar.vue'
@@ -18,6 +19,7 @@ const taskStore = useTaskStore()
 const filter = ref<'all' | TaskStatus>('all')
 const searchKeyword = ref('')
 const selectedTask = ref<Task | null>(null)
+const isAddModalOpen = ref(false)
 
 // 筛选任务（支持状态筛选和关键词搜索）
 const filteredTasks = computed(() => {
@@ -75,6 +77,16 @@ const handleViewDetails = (id: string) => {
 const handleCloseDetail = () => {
   selectedTask.value = null
 }
+
+// 打开添加任务弹窗
+const handleOpenAddModal = () => {
+  isAddModalOpen.value = true
+}
+
+// 关闭添加任务弹窗
+const handleCloseAddModal = () => {
+  isAddModalOpen.value = false
+}
 </script>
 
 <template>
@@ -82,7 +94,7 @@ const handleCloseDetail = () => {
     <HeaderToolbar />
     <div class="container">
       <h1>{{ t?.title || 'Task Manager' }}</h1>
-      <TaskAdd />
+      <TaskAdd @open="handleOpenAddModal" />
       <div class="search-container">
         <input
           type="text"
@@ -101,6 +113,7 @@ const handleCloseDetail = () => {
       />
     </div>
     <TaskDetail :task="selectedTask" @close="handleCloseDetail" @update="handleUpdate" />
+    <TaskAddModal :is-open="isAddModalOpen" @close="handleCloseAddModal" />
   </main>
 </template>
 
