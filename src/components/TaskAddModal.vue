@@ -81,7 +81,7 @@ const { t } = storeToRefs(i18nStore)
 
 const taskTitle = ref('')
 const taskDescription = ref('')
-const selectedCategory = ref<TaskCategory>('😅')
+const selectedCategory = ref<TaskCategory>('😶')
 const titleInputRef = ref<HTMLInputElement | null>(null)
 
 // 预设的10个分类 emoji
@@ -92,7 +92,7 @@ watch(() => props.isOpen, (newVal) => {
   if (newVal) {
     taskTitle.value = ''
     taskDescription.value = ''
-    selectedCategory.value = '😅'
+    selectedCategory.value = '😶'
     nextTick(() => {
       titleInputRef.value?.focus()
     })
@@ -277,15 +277,23 @@ const handleSave = () => {
   align-items: center;
   justify-content: center;
 
-  &:hover {
+  &:hover:not(.active) {
     border-color: var(--primary-color);
     transform: translateY(-1px) scale(1.05);
   }
 
   &.active {
     border-color: var(--primary-color);
-    background: var(--primary-color);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
     transform: scale(1.1);
+
+    &:hover {
+      // hover 时边框变粗，颜色保持粉色，但大小不变
+      border-width: 3px;
+      border-color: var(--primary-color);
+      transform: scale(1.1);
+    }
   }
 }
 

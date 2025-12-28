@@ -112,7 +112,7 @@ const showSortDropdown = ref(false)
 const categoryFilterRef = ref<HTMLElement | null>(null)
 const sortFilterRef = ref<HTMLElement | null>(null)
 const selectedCategory = computed(() => props.selectedCategory || 'all')
-const selectedSort = computed(() => props.selectedSort || 'updatedTime')
+const selectedSort = computed(() => props.selectedSort || 'createdTime')
 
 // 获取已使用的分类（去重）
 const usedCategories = computed(() => {

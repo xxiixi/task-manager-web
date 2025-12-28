@@ -139,7 +139,6 @@ watch(() => props.task?.id, (newId, oldId) => {
     editCategory.value = props.task.category
     nextTick(() => {
       titleInputRef.value?.focus()
-      titleInputRef.value?.select()
     })
   }
 }, { immediate: true })
