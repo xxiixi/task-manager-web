@@ -2,6 +2,13 @@
   <div class="header-toolbar">
     <button
       class="toolbar-btn"
+      @click="handleStarDrawer"
+      :title="starDrawerTooltip"
+    >
+      <i class="bi bi-star-fill"></i>
+    </button>
+    <button
+      class="toolbar-btn"
       @click="handleExport"
       :title="exportTooltip"
     >
@@ -49,11 +56,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useThemeStore } from '../stores/theme'
 import { useI18nStore } from '../stores/i18n'
 import { useTaskStore } from '../stores/task'
 import type { Task } from '../types/task'
+
+const router = useRouter()
 
 const themeStore = useThemeStore()
 const i18nStore = useI18nStore()
@@ -84,6 +94,14 @@ const exportTooltip = computed(() => {
 const importTooltip = computed(() => {
   return t.value?.importData || '导入数据'
 })
+
+const starDrawerTooltip = computed(() => {
+  return '五角星绘制'
+})
+
+const handleStarDrawer = () => {
+  router.push('/star-drawer')
+}
 
 const handleToggleTheme = () => {
   themeStore.toggleTheme()
@@ -165,9 +183,14 @@ const handleFileImport = async (event: Event) => {
   position: fixed;
   top: @spacing-md;
   right: @spacing-md;
+  left: @spacing-md;
   display: flex;
   gap: @spacing-sm;
   z-index: @z-index-fixed;
+}
+
+.header-toolbar > :first-child {
+  margin-right: auto;
 }
 
 .toolbar-btn {

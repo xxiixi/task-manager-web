@@ -8,6 +8,11 @@ const router = createRouter({
       name: 'home',
       component: () => import('../views/Home.vue'),
     },
+    {
+      path: '/star-drawer',
+      name: 'star-drawer',
+      component: () => import('../views/StarDrawer.vue'),
+    },
   ],
 })
 
