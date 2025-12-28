@@ -14,7 +14,11 @@
 		"build-only": "vite build",
 		"type-check": "vue-tsc --build",
 		"lint": "eslint . --fix --cache",
-		"format": "prettier --write --experimental-cli src/"
+		"format": "prettier --write --experimental-cli src/",
+		"backup": "node tools/backup/bin/cli.js backup",
+		"backup:restore": "node tools/backup/bin/cli.js restore",
+		"backup:list": "node tools/backup/bin/cli.js list",
+		"backup:delete": "node tools/backup/bin/cli.js delete"
 	},
 	"dependencies": {
 		"bootstrap-icons": "^1.13.1",

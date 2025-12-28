@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+// @ts-ignore
 import type { Task, TaskStatus, TaskCategory, TaskFilters } from '@/types/task'
 
 export const useTaskStore = defineStore(

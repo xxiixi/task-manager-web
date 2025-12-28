@@ -1,7 +1,5 @@
 # Develop Notes
 
-molardata frontend homework
-
 [Pinia](https://pinia.vuejs.org/zh/introduction.html)
 
 [Vue.js](https://cn.vuejs.org/)
