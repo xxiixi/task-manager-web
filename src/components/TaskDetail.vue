@@ -17,6 +17,7 @@
             v-model="editTitle"
             type="text"
             class="detail-input"
+            maxlength="100"
             @keyup.enter="handleSave"
             @keyup.esc="handleCancel"
           />
@@ -28,6 +29,7 @@
             v-model="editDescription"
             class="detail-textarea"
             rows="4"
+            maxlength="2000"
           ></textarea>
         </div>
 
@@ -58,21 +60,21 @@
           </div>
         </div>
 
-        <div class="detail-section">
+        <div class="detail-section date-section">
           <div class="detail-value time">
             <span class="time-prefix">{{ t.createdAtPrefix }}</span>
             {{ formatDate(task.createdAt) }}
           </div>
         </div>
 
-        <div class="detail-section">
+        <div class="detail-section date-section">
           <div class="detail-value time">
             <span class="time-prefix">{{ t.updatedAtPrefix }}</span>
             {{ formatDate(task.updatedAt) }}
           </div>
         </div>
 
-        <div class="detail-section" v-if="task.dueDate">
+        <div class="detail-section date-section" v-if="task.dueDate">
           <label class="detail-label">{{ t.dueDate }}</label>
           <div class="detail-value time">
             <span class="time-prefix">{{ t.dueDatePrefix }}</span>
@@ -305,10 +307,14 @@ const handleToggleStatus = () => {
 }
 
 .detail-section {
-  margin-bottom: @spacing-lg;
+  margin-bottom: @spacing-md;
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  &.date-section {
+    margin-bottom: @spacing-xs;
   }
 }
 
@@ -340,14 +346,18 @@ const handleToggleStatus = () => {
     font-family: 'Monaco', 'Menlo', monospace;
     color: var(--text-primary);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     gap: @spacing-xs;
 
     .time-prefix {
-      font-family: @font-family;
+      font-family: 'Monaco', 'Menlo';
       font-size: @font-size-sm;
       color: var(--text-tertiary);
       font-weight: @font-weight-normal;
+      flex-shrink: 0;
+      width: 150px;
+      text-align: left;
     }
   }
 }
@@ -380,7 +390,7 @@ const handleToggleStatus = () => {
 }
 
 .detail-textarea {
-  resize: vertical;
+  resize: none;
   min-height: 100px;
   font-size: @font-size-sm;
   line-height: @line-height-relaxed;
@@ -506,6 +516,7 @@ const handleToggleStatus = () => {
   display: flex;
   gap: @spacing-sm;
   flex-wrap: wrap;
+  margin-bottom: @spacing-xl;
 }
 
 .category-option {

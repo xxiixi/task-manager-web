@@ -276,7 +276,7 @@ onUnmounted(() => {
     align-items: center;
     gap: @spacing-sm;
     width: 100%;
-    margin-top: @spacing-sm;
+    margin-top: 12px;
   }
 
   .search-container {
