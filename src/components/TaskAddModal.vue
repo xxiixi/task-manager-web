@@ -16,6 +16,7 @@
             type="text"
             class="form-input"
             :placeholder="t.taskTitle"
+            maxlength="100"
             @keyup.enter="handleSave"
             @keyup.esc="handleClose"
           />
@@ -28,6 +29,7 @@
             class="form-textarea"
             :placeholder="t.taskDescription"
             rows="4"
+            maxlength="2000"
           ></textarea>
         </div>
 
@@ -249,7 +251,7 @@ const handleSave = () => {
 }
 
 .form-textarea {
-  resize: vertical;
+  resize: none;
   min-height: 100px;
   font-size: @font-size-sm;
   line-height: @line-height-relaxed;

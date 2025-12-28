@@ -7,8 +7,10 @@
           <TaskAdd @open="handleOpenAddModal" />
         </div>
         <div class="title-section">
-
-          <h1>{{ t?.title || 'Task Manager' }}</h1>
+          <h1>
+            <i class="bi bi-ui-radios"></i>
+            {{ t?.title || 'Task Manager' }}
+          </h1>
         </div>
         <div class="header-section">
           <TaskFilter
@@ -221,6 +223,15 @@ const handleCloseAddModal = () => {
       text-align: left;
       transition: color @transition-base;
       flex: 1;
+      display: flex;
+      align-items: flex-end;
+      gap: @spacing-sm;
+
+      i {
+        font-size: @font-size-2xl;
+        color: var(--primary-color);
+        margin-bottom: -1px;
+      }
     }
 
     .task-add-section {
