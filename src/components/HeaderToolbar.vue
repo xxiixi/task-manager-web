@@ -1,12 +1,22 @@
 <template>
   <div class="header-toolbar">
-    <button
-      class="toolbar-btn"
-      @click="handleStarDrawer"
-      :title="starDrawerTooltip"
-    >
-      <i class="bi bi-star-fill"></i>
-    </button>
+    <div class="left-buttons">
+      <button
+        class="toolbar-btn"
+        @click="handleStarDrawer"
+        :title="starDrawerTooltip"
+      >
+        <i class="bi bi-star"></i>
+      </button>
+      <button
+        class="toolbar-btn"
+        @click="handlePointCloud"
+        :title="pointCloudTooltip"
+      >
+        <i class="bi bi-cloud"></i>
+      </button>
+    </div>
+    <div class="right-buttons">
     <button
       class="toolbar-btn"
       @click="handleExport"
@@ -51,6 +61,7 @@
     >
       <i class="bi bi-github"></i>
     </a>
+    </div>
   </div>
 </template>
 
@@ -99,8 +110,16 @@ const starDrawerTooltip = computed(() => {
   return '五角星绘制'
 })
 
+const pointCloudTooltip = computed(() => {
+  return '点云渲染'
+})
+
 const handleStarDrawer = () => {
   router.push('/star-drawer')
+}
+
+const handlePointCloud = () => {
+  router.push('/point-cloud')
 }
 
 const handleToggleTheme = () => {
@@ -191,6 +210,16 @@ const handleFileImport = async (event: Event) => {
 
 .header-toolbar > :first-child {
   margin-right: auto;
+}
+
+.left-buttons {
+  display: flex;
+  gap: @spacing-sm;
+}
+
+.right-buttons {
+  display: flex;
+  gap: @spacing-sm;
 }
 
 .toolbar-btn {

@@ -13,6 +13,11 @@ const router = createRouter({
       name: 'star-drawer',
       component: () => import('../views/StarDrawer.vue'),
     },
+    {
+      path: '/point-cloud',
+      name: 'point-cloud',
+      component: () => import('../views/PointCloud.vue'),
+    },
   ],
 })
 
