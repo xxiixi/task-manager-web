@@ -21,6 +21,7 @@
 		"paper": "^0.12.18",
 		"pinia": "^3.0.4",
 		"pinia-plugin-persistedstate": "^3.2.1",
+		"three": "^0.182.0",
 		"vue": "^3.5.25",
 		"vue-router": "^4.6.3"
 	},
