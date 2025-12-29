@@ -47,19 +47,16 @@ onMounted(() => {
     // 计算五角星的大小（取图片宽度和高度的较小值的 1/5）
     const starSize = Math.min(img.width, img.height) / 5
 
-    // 创建五角星路径
+    // 创建五角星路径：两个同心圆交替取点
     const star = new paper.Path.Star({
       center: [centerX, centerY],
       points: 5,
-      radius1: starSize / 2,
-      radius2: starSize,
+      radius1: starSize,
+      radius2: starSize / 2,
       fillColor: '#FFD700',
       strokeColor: '#FFA500',
       strokeWidth: 2
     })
-
-    // 旋转180度使五角星正向
-    star.rotate(180)
   }
 })
 
