@@ -44,10 +44,5 @@ export interface TaskFilters {
   tags?: string[]
   /** 关键词搜索 */
   keyword?: string
-  /** 日期范围筛选 */
-  dateRange?: {
-    start?: number
-    end?: number
-  }
 }
 
