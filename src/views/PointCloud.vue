@@ -1,18 +1,18 @@
 <template>
   <div class="point-cloud-page">
-    <button class="back-btn" @click="goBack" title="返回">
+    <button class="back-btn" @click="goBack" :title="t.back">
       <i class="bi bi-arrow-left"></i>
     </button>
     <div class="color-controls">
       <div class="control-group">
-        <label>颜色模式：</label>
+        <label>{{ t.colorMode }}：</label>
         <select v-model="colorMode" @change="onColorModeChange">
-          <option value="gradient">渐变</option>
-          <option value="solid">单色</option>
+          <option value="gradient">{{ t.gradient }}</option>
+          <option value="solid">{{ t.solid }}</option>
         </select>
       </div>
       <div v-if="colorMode === 'gradient'" class="control-group">
-        <label>色域偏移：</label>
+        <label>{{ t.hueOffset }}：</label>
         <input 
           type="range" 
           v-model.number="hueOffset" 
@@ -24,15 +24,15 @@
         <span class="value-display">{{ hueOffset }}°</span>
       </div>
       <div v-if="colorMode === 'solid'" class="control-group">
-        <label>单色：</label>
+        <label>{{ t.solidColor }}：</label>
         <select v-model="solidColor" @change="onSolidColorChange">
-          <option value="white">白色</option>
-          <option value="red">红色</option>
-          <option value="green">绿色</option>
-          <option value="blue">蓝色</option>
-          <option value="yellow">黄色</option>
-          <option value="cyan">青色</option>
-          <option value="magenta">洋红</option>
+          <option value="white">{{ t.white }}</option>
+          <option value="red">{{ t.red }}</option>
+          <option value="green">{{ t.green }}</option>
+          <option value="blue">{{ t.blue }}</option>
+          <option value="yellow">{{ t.yellow }}</option>
+          <option value="cyan">{{ t.cyan }}</option>
+          <option value="magenta">{{ t.magenta }}</option>
         </select>
       </div>
     </div>
@@ -45,13 +45,16 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useThemeStore } from '../stores/theme'
+import { useI18nStore } from '../stores/i18n'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 const router = useRouter()
 const containerRef = ref<HTMLDivElement | null>(null)
 const themeStore = useThemeStore()
+const i18nStore = useI18nStore()
 const { isDark } = storeToRefs(themeStore)
+const { t } = storeToRefs(i18nStore)
 
 let scene: THREE.Scene
 let camera: THREE.PerspectiveCamera

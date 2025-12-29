@@ -52,7 +52,20 @@ const translations = {
     importError: '数据导入失败',
     confirmImport: '导入数据将覆盖当前所有任务，确定要继续吗？',
     noTasks: '暂无任务',
-    noTasksDesc: '点击右上角按钮添加第一个任务'
+    noTasksDesc: '点击右上角按钮添加第一个任务',
+    back: '返回',
+    colorMode: '颜色模式',
+    gradient: '渐变',
+    solid: '单色',
+    hueOffset: '色域偏移',
+    solidColor: '单色',
+    white: '白色',
+    red: '红色',
+    green: '绿色',
+    blue: '蓝色',
+    yellow: '黄色',
+    cyan: '青色',
+    magenta: '洋红'
   },
   'en-US': {
     title: 'Task Manager',
@@ -102,7 +115,20 @@ const translations = {
     importError: 'Failed to import data',
     confirmImport: 'Importing data will overwrite all current tasks. Are you sure you want to continue?',
     noTasks: 'No tasks yet',
-    noTasksDesc: 'Click the button in the top right to add your first task'
+    noTasksDesc: 'Click the button in the top right to add your first task',
+    back: 'Back',
+    colorMode: 'Color Mode',
+    gradient: 'Gradient',
+    solid: 'Solid',
+    hueOffset: 'Hue Offset',
+    solidColor: 'Solid Color',
+    white: 'White',
+    red: 'Red',
+    green: 'Green',
+    blue: 'Blue',
+    yellow: 'Yellow',
+    cyan: 'Cyan',
+    magenta: 'Magenta'
   }
 }
 
