@@ -110,17 +110,6 @@ export const useTaskStore = defineStore(
           )
         }
 
-        // 日期范围筛选
-        if (filters.dateRange) {
-          const { start, end } = filters.dateRange
-          if (start) {
-            result = result.filter((task) => !task.dueDate || task.dueDate >= start)
-          }
-          if (end) {
-            result = result.filter((task) => !task.dueDate || task.dueDate <= end)
-          }
-        }
-
         return result
       }
     })
