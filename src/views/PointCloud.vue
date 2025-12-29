@@ -3,6 +3,39 @@
     <button class="back-btn" @click="goBack" title="返回">
       <i class="bi bi-arrow-left"></i>
     </button>
+    <div class="color-controls">
+      <div class="control-group">
+        <label>颜色模式：</label>
+        <select v-model="colorMode" @change="onColorModeChange">
+          <option value="gradient">渐变</option>
+          <option value="solid">单色</option>
+        </select>
+      </div>
+      <div v-if="colorMode === 'gradient'" class="control-group">
+        <label>色域偏移：</label>
+        <input 
+          type="range" 
+          v-model.number="hueOffset" 
+          min="0" 
+          max="360" 
+          step="1"
+          @input="onHueOffsetChange"
+        />
+        <span class="value-display">{{ hueOffset }}°</span>
+      </div>
+      <div v-if="colorMode === 'solid'" class="control-group">
+        <label>单色：</label>
+        <select v-model="solidColor" @change="onSolidColorChange">
+          <option value="white">白色</option>
+          <option value="red">红色</option>
+          <option value="green">绿色</option>
+          <option value="blue">蓝色</option>
+          <option value="yellow">黄色</option>
+          <option value="cyan">青色</option>
+          <option value="magenta">洋红</option>
+        </select>
+      </div>
+    </div>
     <div ref="containerRef" class="canvas-container"></div>
   </div>
 </template>
@@ -26,6 +59,23 @@ let renderer: THREE.WebGLRenderer
 let controls: OrbitControls
 let animationId: number
 let points: THREE.Points | null = null
+let geometry: THREE.BufferGeometry | null = null
+let material: THREE.PointsMaterial | null = null
+let originalPositions: Float32Array | null = null
+let originalColors: Float32Array | null = null
+let geometryBounds: {
+  minX: number; maxX: number;
+  minY: number; maxY: number;
+  minZ: number; maxZ: number;
+  centerX: number; centerY: number; centerZ: number;
+  rangeX: number; rangeY: number; rangeZ: number;
+  maxRange: number;
+} | null = null
+
+// 颜色模式状态
+const colorMode = ref<'gradient' | 'solid'>('gradient')
+const hueOffset = ref(0) // 色域偏移（0-360度）
+const solidColor = ref<'white' | 'red' | 'green' | 'blue' | 'yellow' | 'cyan' | 'magenta'>('white')
 
 // ==================== PCD文件解析 ====================
 const parsePCD = async (url: string): Promise<{ positions: Float32Array; colors: Float32Array }> => {
@@ -81,20 +131,47 @@ const parsePCD = async (url: string): Promise<{ positions: Float32Array; colors:
   const rangeZ = maxZ - minZ
   const maxRange = Math.max(rangeX, rangeY, rangeZ)
   
-  // ==================== 颜色计算（HSV彩虹渐变） ====================
+  // 保存边界信息供后续使用
+  geometryBounds = {
+    minX, maxX, minY, maxY, minZ, maxZ,
+    centerX, centerY, centerZ,
+    rangeX, rangeY, rangeZ, maxRange
+  }
+  
+  // 计算初始颜色（彩虹渐变，色域偏移为0）
+  calculateColors(positions, colors, 0)
+  
+  return { positions, colors }
+}
+
+// ==================== 颜色计算函数 ====================
+const calculateColors = (
+  positions: Float32Array,
+  colors: Float32Array,
+  hueOffsetDegrees: number = 0 // 色域偏移（0-360度）
+) => {
+  if (!geometryBounds) return
+  
+  const { minX, maxX, minY, maxY, minZ, maxZ, centerX, centerY, centerZ, rangeX, rangeY, rangeZ, maxRange } = geometryBounds
+  const pointCount = positions.length / 3
+  
+  // 将色域偏移转换为 0-1 范围
+  const hueOffset = (hueOffsetDegrees % 360) / 360
+  
   for (let i = 0; i < pointCount; i++) {
     const x = positions[i * 3]
     const y = positions[i * 3 + 1]
     const z = positions[i * 3 + 2]
     
+    // 彩虹渐变：基于高度和距离
     const distX = (x - centerX) / maxRange
     const distY = (y - centerY) / maxRange
     const distZ = (z - centerZ) / maxRange
     const normalizedY = (y - minY) / rangeY
     const distance = Math.sqrt(distX * distX + distY * distY + distZ * distZ)
     
-    // HSV颜色空间：基于高度和距离
-    const hue = (normalizedY * 0.7 + distance * 0.3) % 1.0
+    // 应用色域偏移
+    const hue = ((normalizedY * 0.7 + distance * 0.3) + hueOffset) % 1.0
     const saturation = 0.7 + distance * 0.3
     const value = 0.6 + normalizedY * 0.4
     
@@ -116,8 +193,6 @@ const parsePCD = async (url: string): Promise<{ positions: Float32Array; colors:
     colors[i * 3 + 1] = g + m
     colors[i * 3 + 2] = b + m
   }
-  
-  return { positions, colors }
 }
 
 // ==================== Three.js场景初始化 ====================
@@ -150,23 +225,27 @@ const initThree = async (): Promise<() => void> => {
   try {
     const { positions, colors } = await parsePCD('/pointclouds/cat.pcd')
     
-    const geometry = new THREE.BufferGeometry()
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    // 保存原始数据
+    originalPositions = positions
+    originalColors = new Float32Array(colors)
     
-    const material = new THREE.PointsMaterial({
+    geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))  //  每个顶点 3 个分量（R, G, B）
+    
+    material = new THREE.PointsMaterial({
       size: 0.001,
-      vertexColors: true,
+      vertexColors: true, // 使用顶点颜色
       sizeAttenuation: true
     })
     
-    points = new THREE.Points(geometry, material)
+    points = new THREE.Points(geometry, material) // 创建点云对象
     
     // 移动到原点并旋转
     geometry.computeBoundingBox()
     const center = geometry.boundingBox!.getCenter(new THREE.Vector3())
     points.position.sub(center)
-    points.rotateX(-Math.PI / 2) // 让猫头朝向观察者
+    points.rotateX(-Math.PI / 2)
     scene.add(points)
     
     // ==================== 坐标轴和相机设置 ====================
@@ -239,6 +318,83 @@ const goBack = () => {
   router.push('/')
 }
 
+// ==================== 颜色切换功能 ====================
+
+// 单色映射
+const solidColorMap: Record<string, [number, number, number]> = {
+  white: [1.0, 1.0, 1.0],
+  red: [1.0, 0.0, 0.0],
+  green: [0.0, 1.0, 0.0],
+  blue: [0.0, 0.0, 1.0],
+  yellow: [1.0, 1.0, 0.0],
+  cyan: [0.0, 1.0, 1.0],
+  magenta: [1.0, 0.0, 1.0]
+}
+
+// 切换到单色模式（使用材质覆盖）
+const switchToSolidColor = (colorName: string) => {
+  if (!material || !geometry) return
+  
+  // 先禁用顶点颜色
+  material.vertexColors = false
+  
+  // 然后设置材质颜色
+  const [r, g, b] = solidColorMap[colorName]
+  material.color.setRGB(r, g, b)
+  
+  // 确保材质更新
+  material.needsUpdate = true
+}
+
+// 切换到渐变模式（修改顶点颜色）
+const switchToGradient = (hueOffsetValue: number) => {
+  if (!geometry || !originalPositions || !material) return
+  
+  // 获取颜色属性，如果不存在则重新创建
+  let colorAttribute = geometry.getAttribute('color') as THREE.BufferAttribute
+  if (!colorAttribute) {
+    // 如果颜色属性不存在，重新创建
+    const colors = new Float32Array(originalPositions.length)
+    calculateColors(originalPositions, colors, hueOffsetValue)
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    colorAttribute = geometry.getAttribute('color') as THREE.BufferAttribute
+  } else {
+    // 重新计算颜色（彩虹渐变，应用色域偏移）
+    const colors = colorAttribute.array as Float32Array
+    calculateColors(originalPositions, colors, hueOffsetValue)
+    // 标记需要更新
+    colorAttribute.needsUpdate = true
+  }
+  
+  // 恢复使用顶点颜色
+  material.vertexColors = true
+  // 确保材质更新
+  material.needsUpdate = true
+}
+
+// 颜色模式切换
+const onColorModeChange = () => {
+  if (colorMode.value === 'solid') {
+    switchToSolidColor(solidColor.value)
+  } else {
+    switchToGradient(hueOffset.value)
+  }
+}
+
+// 色域偏移变化
+const onHueOffsetChange = () => {
+  if (colorMode.value === 'gradient') {
+    switchToGradient(hueOffset.value)
+  }
+}
+
+// 单色切换
+const onSolidColorChange = () => {
+  if (colorMode.value === 'solid') {
+    switchToSolidColor(solidColor.value)
+  }
+}
+
 let cleanup: (() => void) | null = null
 
 onMounted(async () => {
@@ -306,6 +462,108 @@ onUnmounted(() => {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.color-controls {
+  position: fixed;
+  top: @spacing-md;
+  right: @spacing-md;
+  padding: @spacing-md;
+  border-radius: @border-radius-md;
+  box-shadow: @shadow-md;
+  z-index: @z-index-fixed;
+  min-width: 200px;
+  backdrop-filter: blur(10px);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+
+  .control-group {
+    margin-bottom: @spacing-sm;
+    display: flex;
+    align-items: center;
+    gap: @spacing-xs;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-size: @font-size-sm;
+      color: var(--text-primary);
+      white-space: nowrap;
+      min-width: 80px;
+    }
+
+    select {
+      flex: 1;
+      padding: @spacing-xs @spacing-sm;
+      border: 1px solid var(--border-color);
+      border-radius: @border-radius-sm;
+      background: var(--bg-color);
+      color: var(--text-primary);
+      font-size: @font-size-sm;
+      cursor: pointer;
+      transition: all @transition-fast;
+
+      &:hover {
+        border-color: var(--primary-color);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 0, 123, 255), 0.2);
+      }
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border-color);
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        cursor: pointer;
+        transition: all @transition-fast;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+
+      &::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        cursor: pointer;
+        border: none;
+        transition: all @transition-fast;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    .value-display {
+      min-width: 50px;
+      text-align: right;
+      font-size: @font-size-sm;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+  }
 }
 </style>
 
