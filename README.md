@@ -87,3 +87,8 @@ pnpm build
 ```sh
 pnpm lint
 ```
+
+## TODO
+
+- 已完成任务置底
+- sorter可以根据状态排序
