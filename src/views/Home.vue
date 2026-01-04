@@ -84,11 +84,35 @@ const filteredTasks = computed(() => {
 
   // 排序
   const sortedTasks = [...tasks]
-  if (sortBy.value === 'updatedTime') {
-    sortedTasks.sort((a, b) => b.updatedAt - a.updatedAt)
-  } else if (sortBy.value === 'createdTime') {
-    sortedTasks.sort((a, b) => b.createdAt - a.createdAt)
+  
+  // 如果是"all"分类，将已完成任务置底
+  if (filter.value === 'all') {
+    sortedTasks.sort((a, b) => {
+      // 先按状态排序：已完成的任务排在最后
+      const aIsCompleted = a.status === 'completed'
+      const bIsCompleted = b.status === 'completed'
+      
+      if (aIsCompleted !== bIsCompleted) {
+        // 如果一个是已完成，一个不是，已完成的排在后面
+        return aIsCompleted ? 1 : -1
+      }
+      
+      // 如果状态相同，按时间排序
+      if (sortBy.value === 'updatedTime') {
+        return b.updatedAt - a.updatedAt
+      } else {
+        return b.createdAt - a.createdAt
+      }
+    })
+  } else {
+    // 非"all"分类，只按时间排序
+    if (sortBy.value === 'updatedTime') {
+      sortedTasks.sort((a, b) => b.updatedAt - a.updatedAt)
+    } else if (sortBy.value === 'createdTime') {
+      sortedTasks.sort((a, b) => b.createdAt - a.createdAt)
+    }
   }
+  
   return sortedTasks
 })
 
